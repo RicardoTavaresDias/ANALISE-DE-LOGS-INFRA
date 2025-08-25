@@ -1,0 +1,52 @@
+-------------------------INTERVALO---------------------------------
+
+    2025-08-05 11:20 *** Um novo backup iniciou.  Número de tarefas na fila: 1 ***
+    2025-08-05 11:20 Prevenindo o sistema de entrar em modo dormir...
+    2025-08-05 11:20 ** Backupeando a tarefa "FTP" **
+    2025-08-05 11:20 Contando os arquivos para a tarefa "FTP"...
+    2025-08-05 11:20 Personificando o usuário ".\administrador" para executar a tarefa "FTP"...
+    2025-08-05 11:20 O usuário ".\administrador" tem agora logado
+    2025-08-05 11:20 A tarefa está agora sendo executada como o usuário ".\administrador"
+    2025-08-05 11:20 Iniciando a imagem de Cópia Sombra de Volume para os drives: C:\
+    2025-08-05 11:20 O conjunto imagem de Cópia Sombra de Volume foi criado com sucesso
+    2025-08-05 11:20 Conectando a "177.66.152.194: 21001"
+    2025-08-05 11:20 TLS não está disponível neste servidor.  Tentando uma conexão simples...
+    2025-08-05 11:20 O usuário "uapura" iniciou uma sessão em "177.66.152.194:21001"
+    2025-08-05 11:20 Transmitindo o diretório "GLOBALROOT\Device\HarddiskVolumeShadowCopy9\Backup"
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "melissa": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Morumbi -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Nova pasta": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "nurse": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "O8 ANOS -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Operação Cata Bagulho": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Passeio ao Tiete 13-7-2007": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "PLAY CENTER": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "reciclagem": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "ro": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "sabão": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "saude 10": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "semana do idoso": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "SIPAT 2008 ok": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "SIPAT 2010": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "sitio ii": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Solo Sagrado": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "tabu": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "THAIS -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Unidade": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "UNIDADE 2010 -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "unidade 2014": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde alterar o diretório remoto para a pasta pai: Connection Closed Gracefully.
+    2025-08-05 11:25 Alterando o item de histórico para guardado.  Motivo:  não criando backups separados
+    2025-08-05 11:25 Removendo a imagem da Cópia Sombra de Volume "c5c1e492-70bf-4760-8f77-3274b7a8387d"
+    2025-08-05 11:25 O conjunto imagem de Cópia Sombra de Volume foi removido com sucesso
+    2025-08-05 11:25 Revertendo o módulo de trabalho para rodar sob a conta de usuário original
+    2025-08-05 11:25 O módulo de trabalho está agora rodando sob a conta de usuário original
+    2025-08-05 11:25 Tempo total de backup para "FTP": 0 horas, 5 minutos, 11 segundos
+    2025-08-05 11:25 ** Backup terminado para a tarefa "FTP".  Erros: 23.  Arquivos processados: 40036.  Arquivos backupeados: 0.  Tamanho total: 0 bytes **
+    2025-08-05 11:25 -- 
+    2025-08-05 11:25 O sistema pode agora entrar em modo dormir
+    2025-08-05 11:25 Tempo total de backup: 0 horas, 5 minutos, 15 segundos
+    2025-08-05 11:25 *** Backup terminado.  Erros: 23.  Arquivos processados: 40036.  Arquivos backupeados: 0.  Tamanho total: 0 bytes ***
+
+-------------------------INTERVALO---------------------------------
+
