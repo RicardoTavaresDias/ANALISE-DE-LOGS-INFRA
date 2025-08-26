@@ -32,7 +32,7 @@ export async function getFileLog () {
 
   await fs.promises.writeFile("./unidade/apura/Logs/teste.txt", logError.flat())
 
-  return "Salvo com sucesso"
+  return "Análise concluída com sucesso e retorno dos logs com erro."
 }
 
 export function files () {

@@ -3,4 +3,4 @@ import { logAnalysisRouter } from "./log-analysis.router"
 
 export const router = Router()
 
-router.use("/file", logAnalysisRouter)
+router.use("/log", logAnalysisRouter)
