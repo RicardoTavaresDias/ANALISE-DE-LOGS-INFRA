@@ -17,9 +17,9 @@ class LogAnalysis {
 
   async get (request: Request, response: Response) {
     try {
-      const result = await getFileLog()
+      await getFileLog()
 
-      response.status(200).json({ message: result })
+      response.status(200).json({ message: "Análise concluída com sucesso e retorno dos logs com erro." })
     } catch (error: any) {
       console.log(error)
       response.status(500).json({ message: error.message })

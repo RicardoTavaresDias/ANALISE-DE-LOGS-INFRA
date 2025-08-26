@@ -14,6 +14,5 @@ export function ErrorHandling(error: any, request: Request, response: Response, 
   }
 
     response.status(error.startCode).json({ message: error.message, error: error.meta })
-
-    next()
+    return
   }

@@ -1,9 +1,10 @@
+import { AppError } from "@/utils/AppError"
 import fs from "node:fs"
 
 export async function getFileLog () {
   const fileExistApura = fs.existsSync("./unidade/apura")
   if (!fileExistApura) {
-    throw new Error("Arquivo não encontrado.")
+    throw new AppError("Arquivo não encontrado.", 404)
   }
 
   const unidadeApura = await fs.promises.readFile("./unidade/apura/Logs/log 2025-08-05.txt", "utf16le")
@@ -32,7 +33,7 @@ export async function getFileLog () {
 
   await fs.promises.writeFile("./unidade/apura/Logs/teste.txt", logError.flat())
 
-  return "Análise concluída com sucesso e retorno dos logs com erro."
+  return 
 }
 
 export function files () {
