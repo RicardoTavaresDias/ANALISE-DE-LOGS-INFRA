@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { GlpiBrowser } from "@/services/glpi"
 import { loginSchema } from "@/schemas/glpi.schema";
 
@@ -58,15 +58,19 @@ import { loginSchema } from "@/schemas/glpi.schema";
  */
 
 export class LoginController {
-  async session (request: Request, response: Response) {
-    const user = loginSchema.safeParse(request.body)
-    if(!user.success) {
-      return response.status(400).json({ 
-        message: user.error.issues.map(err => (err.path + " " + err.message)) 
-      })
-    }
+  async session (request: Request, response: Response, next: NextFunction) {
+    try {
+      const user = loginSchema.safeParse(request.body)
+      if(!user.success) {
+        return response.status(400).json({ 
+          message: user.error.issues.map(err => (err.path + " " + err.message)) 
+        })
+      }
 
-    const glpiBrowser = new GlpiBrowser(user.data)
-    await glpiBrowser.login()
+      const glpiBrowser = new GlpiBrowser(user.data)
+      await glpiBrowser.login()
+    } catch (error) {
+      next(error)
+    }
   }
 }
