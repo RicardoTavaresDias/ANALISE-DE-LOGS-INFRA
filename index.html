@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Logs</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #eee; }
+    pre { white-space: pre; padding: 1rem; background: #222; border-radius: 8px; }
+    h2 { font-family: Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <h2>Logs recebidos</h2>
+  <button id="btnLoad">Carregar Logs</button>
+  <pre id="output">Clique em "Carregar Logs"...</pre>
+
+  <script>
+    document.getElementById("btnLoad").addEventListener("click", async () => {
+      try {
+        const res = await fetch("http://localhost:3333/log/files");        
+        if(await res.status === 500){
+          const resultJson = await res.json()
+          return document.getElementById("output").textContent = "ERROR 500: " + resultJson.message;
+        }
+
+        const text = await res.text()
+        document.getElementById("output").textContent = text;
+      } catch (err) {
+        document.getElementById("output").textContent = "Erro ao buscar logs: " + err;
+      }
+    });
+  </script>
+</body>
+</html>

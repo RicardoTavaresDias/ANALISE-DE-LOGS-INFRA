@@ -23,28 +23,28 @@ function parseLogs (textFile: string[]) {
   let isBlocked: boolean = false
   let hasError: boolean = false
 
-  const blockInitial = new RegExp("\\bUm novo backup iniciou.  Número de tarefas na fila: 1\\b")
-  const blockGLOBALROOT = new RegExp('\\bA tarefa está agora\\b')
-  const blockError = new RegExp("\\bERR \\b")
-  const blockEnd = new RegExp("\\bBackup terminado.  \\b")
+  const regexBackupStart = new RegExp("\\bUm novo backup iniciou.  Número de tarefas na fila: 1\\b")
+  const regexTaskRunning = new RegExp('\\bA tarefa está agora\\b')
+  const regexBackupError = new RegExp("\\bERR \\b")
+  const regexBackupFinish = new RegExp("\\bBackup terminado.  \\b")
 
   for (const line of textFile) {
 
-    if (blockInitial.test(line)) {
+    if (regexBackupStart.test(line)) {
       arrayLogs.push("\n\n-------------------------INTERVALO---------------------------------\n")
       arrayLogs.push("\n" + line)
       isBlocked = true
-    } else if (blockGLOBALROOT.test(line)) {
+    } else if (regexTaskRunning.test(line)) {
       arrayLogs.push("\n" + line)
       arrayLogsError.push(...arrayLogs)
       arrayLogs.length = 0
       isBlocked = false
     } else if (isBlocked) {
       arrayLogs.push("\n" + line)
-    } else if (blockError.test(line)) {
+    } else if (regexBackupError.test(line)) {
       arrayLogsError.push("\n" + line)
       hasError = true
-    } else if (blockEnd.test(line)) {
+    } else if (regexBackupFinish.test(line)) {
       arrayLogsError.push("\n" + line)
       hasError = false
     } else if (hasError) {
@@ -58,9 +58,10 @@ function parseLogs (textFile: string[]) {
 
 // Salvando logs com error em arquivo txt
 async function saveLogResult (arrayLogsError: string[]) {
-   //const teste = arrayLogsError.join("").split("-------------------------INTERVALO---------------------------------")
-  //console.log(teste.filter(value => value.includes("ERR ")).join("\n"))
+  const refactoringLogs = arrayLogsError.join("").split("-------------------------INTERVALO---------------------------------")
+  const successfullyRemovingLogs = refactoringLogs.filter(value => value.includes("ERR ")).join("\n")
 
+  // ******** Mudar para successfullyRemovingLogs ************************
   await fs.promises.writeFile("./unidade/apura/Logs/teste.txt", arrayLogsError.join(""))
 }
 
@@ -72,12 +73,4 @@ async function getFileLog () {
   return
 }
 
-
-///
-function files () {
-  const result = fs.readdirSync("./unidade/apura/Logs")
-
-  return result
-}
-
-export { getFileLog, files }
+export { getFileLog }

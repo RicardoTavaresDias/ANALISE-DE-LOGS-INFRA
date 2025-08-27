@@ -2,6 +2,10 @@ GET http://localhost:3333/log
 
 ###
 
+GET http://localhost:3333/log/files
+
+###
+
 POST http://localhost:3333
 Content-Type: application/json
 
