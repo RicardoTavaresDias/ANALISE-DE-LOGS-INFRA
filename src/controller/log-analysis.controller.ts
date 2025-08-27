@@ -26,6 +26,8 @@ class LogAnalysis {
     }
   }
 
+
+  ///
   async getFiles (request: Request, response: Response) {
     const result = files()
 
