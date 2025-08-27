@@ -5,8 +5,7 @@ function readUnits() {
   try {
     const result = fs.readdirSync("./unidade");
     return result
-  } catch (error: any) {
-    console.log(error.message)
+  } catch {
     throw new AppError("Não foi possível ler a pasta ./unidade", 500);
   }
 }
