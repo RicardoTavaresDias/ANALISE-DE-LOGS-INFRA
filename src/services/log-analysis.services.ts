@@ -1,7 +1,12 @@
 import { AppError } from "@/utils/AppError"
 import fs from "node:fs"
 
-// Leitura do arquivo de logs
+/**
+ * Lê um arquivo de log específico dentro de ./unidade/apura/Logs.
+ * @throws {AppError} Se a pasta "apura" não for encontrada.
+ * @returns {Promise<string[]>} Conteúdo do log em array de linhas
+ */
+
 async function readLogFile () {
   const fileExistApura = fs.existsSync("./unidade/apura")
   if (!fileExistApura) {
@@ -14,7 +19,13 @@ async function readLogFile () {
   return textFile
 }
 
-// Restruturando logs somente com erros
+/**
+ * Filtra e estrutura apenas os trechos de log com possíveis erros.
+ * 
+ * @param {string[]} textFile - Linhas do arquivo de log
+ * @returns {string[]} Lista de trechos de log contendo erros
+ */
+
 function parseLogs (textFile: string[]) {
   
   let arrayLogs: string[] = []
@@ -56,7 +67,13 @@ function parseLogs (textFile: string[]) {
   return arrayLogsError
 }
 
-// Salvando logs com error em arquivo txt
+/**
+ * Salva os logs filtrados com erro em um arquivo "teste.txt".
+ * 
+ * @param {string[]} arrayLogsError - Lista de logs com erro
+ * @returns {Promise<void>}
+ */
+
 async function saveLogResult (arrayLogsError: string[]) {
   const refactoringLogs = arrayLogsError.join("").split("-------------------------INTERVALO---------------------------------")
   const successfullyRemovingLogs = refactoringLogs.filter(value => value.includes("ERR ")).join("\n")
@@ -64,6 +81,13 @@ async function saveLogResult (arrayLogsError: string[]) {
   // ******** Mudar para successfullyRemovingLogs ************************
   await fs.promises.writeFile("./unidade/apura/Logs/teste.txt", arrayLogsError.join(""))
 }
+
+/**
+ * Função principal:
+ * - Lê o arquivo de log
+ * - Filtra apenas erros
+ * - Salva resultado em arquivo
+ */
 
 async function getFileLog () {
   const textFile = await readLogFile()
