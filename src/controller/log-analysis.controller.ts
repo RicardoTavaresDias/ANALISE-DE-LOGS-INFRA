@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getFileLog } from "@/services/log-analysis.services"
-import { getFilesTree } from "@/services/file-structure.services";
+import { FileStructure } from "@/services/file-structure.services";
 
 class LogAnalysis {
 
@@ -58,7 +58,8 @@ class LogAnalysis {
   
   async getFiles (request: Request, response: Response) {
     try {
-      const result = getFilesTree()
+      const fileStructure = new FileStructure()
+      const result = fileStructure.getFilesTree({ bodyDateStart: '2025-08-05', bodyDateEnd: '2025-08-09' })
 
       response.send(result)
     }catch (error: any) {
