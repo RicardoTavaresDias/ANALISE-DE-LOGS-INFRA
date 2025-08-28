@@ -1,0 +1,94 @@
+
+
+-------------------------INTERVALO---------------------------------
+
+﻿    2025-08-05 09:00 *** Um novo backup iniciou.  Número de tarefas na fila: 1 ***
+    2025-08-05 09:00 Prevenindo o sistema de entrar em modo dormir...
+    2025-08-05 09:00 ** Backupeando a tarefa "Copia_log" **
+    2025-08-05 09:00 Contando os arquivos para a tarefa "Copia_log"...
+    2025-08-05 09:00 Personificando o usuário ".\administrador" para executar a tarefa "Copia_log"...
+    2025-08-05 09:00 O usuário ".\administrador" tem agora logado
+    2025-08-05 09:00 A tarefa está agora sendo executada como o usuário ".\administrador"
+    2025-08-05 09:00 *** Backup terminado.  Erros: 0.  Arquivos processados: 30.  Arquivos backupeados: 2.  Tamanho total: 1,23 MB ***
+
+-------------------------INTERVALO---------------------------------
+
+    2025-08-05 11:20 *** Um novo backup iniciou.  Número de tarefas na fila: 1 ***
+    2025-08-05 11:20 Prevenindo o sistema de entrar em modo dormir...
+    2025-08-05 11:20 ** Backupeando a tarefa "FTP" **
+    2025-08-05 11:20 Contando os arquivos para a tarefa "FTP"...
+    2025-08-05 11:20 Personificando o usuário ".\administrador" para executar a tarefa "FTP"...
+    2025-08-05 11:20 O usuário ".\administrador" tem agora logado
+    2025-08-05 11:20 A tarefa está agora sendo executada como o usuário ".\administrador"
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "melissa": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Morumbi -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Nova pasta": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "nurse": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "O8 ANOS -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Operação Cata Bagulho": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Passeio ao Tiete 13-7-2007": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "PLAY CENTER": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "reciclagem": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "ro": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "sabão": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "saude 10": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "semana do idoso": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "SIPAT 2008 ok": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "SIPAT 2010": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "sitio ii": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Solo Sagrado": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "tabu": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "THAIS -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "Unidade": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "UNIDADE 2010 -": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde criar o diretório remoto "unidade 2014": Connection Closed Gracefully.
+ERR 2025-08-05 11:25 Não pôde alterar o diretório remoto para a pasta pai: Connection Closed Gracefully.
+    2025-08-05 11:25 Alterando o item de histórico para guardado.  Motivo:  não criando backups separados
+    2025-08-05 11:25 Removendo a imagem da Cópia Sombra de Volume "c5c1e492-70bf-4760-8f77-3274b7a8387d"
+    2025-08-05 11:25 O conjunto imagem de Cópia Sombra de Volume foi removido com sucesso
+    2025-08-05 11:25 Revertendo o módulo de trabalho para rodar sob a conta de usuário original
+    2025-08-05 11:25 O módulo de trabalho está agora rodando sob a conta de usuário original
+    2025-08-05 11:25 Tempo total de backup para "FTP": 0 horas, 5 minutos, 11 segundos
+    2025-08-05 11:25 ** Backup terminado para a tarefa "FTP".  Erros: 23.  Arquivos processados: 40036.  Arquivos backupeados: 0.  Tamanho total: 0 bytes **
+    2025-08-05 11:25 -- 
+    2025-08-05 11:25 O sistema pode agora entrar em modo dormir
+    2025-08-05 11:25 Tempo total de backup: 0 horas, 5 minutos, 15 segundos
+    2025-08-05 11:25 *** Backup terminado.  Erros: 23.  Arquivos processados: 40036.  Arquivos backupeados: 0.  Tamanho total: 0 bytes ***
+
+-------------------------INTERVALO---------------------------------
+
+    2025-08-05 16:01 *** Um novo backup iniciou.  Número de tarefas na fila: 1 ***
+    2025-08-05 16:01 Prevenindo o sistema de entrar em modo dormir...
+    2025-08-05 16:01 ** Backupeando a tarefa "Backup-SF" **
+    2025-08-05 16:01 Contando os arquivos para a tarefa "Backup-SF"...
+    2025-08-05 16:01 Personificando o usuário "apura.lan\administrator" para executar a tarefa "Backup-SF"...
+    2025-08-05 16:01 O usuário "apura.lan\administrator" tem agora logado
+    2025-08-05 16:01 A tarefa está agora sendo executada como o usuário "apura.lan\administrator"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\01 - ADMINISTRATIVO": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\02 - ASSISTENTE ADMINISTRATIVO"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\02 - ASSISTENTE ADMINISTRATIVO": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\03 - GERENCIA"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\03 - GERENCIA": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\04 - ENFERMAGEM"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\04 - ENFERMAGEM": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\05 - MEDICOS"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\05 - MEDICOS": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\06 - FARMACIA"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\06 - FARMACIA": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\07 - EQUIPE MULTI"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\07 - EQUIPE MULTI": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\08 - ODONTOLOGIA"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\08 - ODONTOLOGIA": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\09 - USO COMUM"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\09 - USO COMUM": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 Criando o diretório de destino "\\smsubsjapadm03\Replica$\10 - TECNOLOGIA DA INF"
+ERR 2025-08-05 16:07 Não pôde criar o diretório de destino "\\smsubsjapadm03\Replica$\10 - TECNOLOGIA DA INF": A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta
+    2025-08-05 16:07 O arquivo de histórico para "Backup-SF" não será salvo porque o resultado do backup é vazio
+    2025-08-05 16:07 Revertendo o módulo de trabalho para rodar sob a conta de usuário original
+    2025-08-05 16:07 O módulo de trabalho está agora rodando sob a conta de usuário original
+    2025-08-05 16:07 Tempo total de backup para "Backup-SF": 0 horas, 6 minutos, 42 segundos
+    2025-08-05 16:07 ** Backup terminado para a tarefa "Backup-SF".  Erros: 10.  Arquivos processados: 88606.  Arquivos backupeados: 1739.  Tamanho total: 1,02 GB **
+    2025-08-05 16:07 -- 
+    2025-08-05 16:07 O sistema pode agora entrar em modo dormir
+    2025-08-05 16:07 Tempo total de backup: 0 horas, 6 minutos, 46 segundos
+    2025-08-05 16:07 *** Backup terminado.  Erros: 10.  Arquivos processados: 88606.  Arquivos backupeados: 1739.  Tamanho total: 1,02 GB ***

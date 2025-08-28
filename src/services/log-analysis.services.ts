@@ -79,7 +79,7 @@ async function saveLogResult (arrayLogsError: string[]) {
   const successfullyRemovingLogs = refactoringLogs.filter(value => value.includes("ERR ")).join("\n")
 
   // ******** Mudar para successfullyRemovingLogs ************************
-  await fs.promises.writeFile("./unidade/apura/Logs/teste.txt", arrayLogsError.join(""))
+  await fs.promises.writeFile("./tmp/teste.txt", arrayLogsError.join(""))
 }
 
 /**
