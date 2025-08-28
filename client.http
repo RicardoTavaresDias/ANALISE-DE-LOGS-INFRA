@@ -2,7 +2,13 @@ GET http://localhost:3333/log
 
 ###
 
-GET http://localhost:3333/log/files
+POST http://localhost:3333/log/files
+Content-Type: application/json
+
+{
+  "dateStart": "2025-08-05",
+  "dateEnd": "2025-08-09"
+}
 
 ###
 

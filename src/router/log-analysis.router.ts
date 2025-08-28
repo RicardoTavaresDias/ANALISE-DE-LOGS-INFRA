@@ -5,4 +5,4 @@ export const logAnalysisRouter = Router()
 const logAnalysisController = new LogAnalysis() 
 
 logAnalysisRouter.get("/", logAnalysisController.get)
-logAnalysisRouter.get("/files", logAnalysisController.getFiles)
+logAnalysisRouter.post("/files", logAnalysisController.byLogsFiles)

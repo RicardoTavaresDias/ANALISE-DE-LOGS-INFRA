@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getFileLog } from "@/services/log-analysis.services"
-import { FileStructure } from "@/services/file-structure.services";
+import { FileStructure } from "@/services/file-structure.services"
+import { dateSchema } from "@/schemas/log-analysis.schema"
 
 class LogAnalysis {
 
@@ -29,10 +30,25 @@ class LogAnalysis {
 /**
  * @swagger
  * /log/files:
- *   get:
+ *   post:
  *     summary: Árvore de diretórios das unidades
  *     description: Retorna a estrutura de pastas das unidades contendo os arquivos de logs.
  *     tags: [Logs]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               dateStart:
+ *                 type: string
+ *                 example: "2025-08-05"
+ *               dateEnd:
+ *                 type: string
+ *                 example: "2025-08-09"   
  *     responses:
  *       200:
  *         description: Estrutura de diretórios encontrada
@@ -54,12 +70,24 @@ class LogAnalysis {
  *               └─    └─
  *       500:
  *         description: Não foi possível ler a pasta Logs de determinada unidade
+ *       404:
+ *         description: Não há Arquivos.
  */
   
-  async getFiles (request: Request, response: Response) {
+  async byLogsFiles (request: Request, response: Response) {
     try {
+      const dateFile = dateSchema.safeParse(request.body)
+      if (!dateFile.success) {
+        return response.status(400).json({ 
+          message: dateFile.error.issues.map(err => (err.path + " " + err.message)) 
+        })
+      }
+
       const fileStructure = new FileStructure()
-      const result = fileStructure.getFilesTree({ bodyDateStart: '2025-08-05', bodyDateEnd: '2025-08-09' })
+      const result = fileStructure.getFilesTree({ 
+        bodyDateStart: dateFile.data.dateStart, 
+        bodyDateEnd: dateFile.data.dateEnd 
+      })
 
       response.send(result)
     }catch (error: any) {

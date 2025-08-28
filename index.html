@@ -17,7 +17,16 @@
   <script>
     document.getElementById("btnLoad").addEventListener("click", async () => {
       try {
-        const res = await fetch("http://localhost:3333/log/files");        
+        const res = await fetch("http://localhost:3333/log/files", { 
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dateStart: "2025-08-05",
+            dateEnd: "2025-08-07"
+          })
+        })        
         if(await res.status === 500){
           const resultJson = await res.json()
           return document.getElementById("output").textContent = "ERROR 500: " + resultJson.message;
