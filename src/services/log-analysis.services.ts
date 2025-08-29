@@ -13,7 +13,7 @@ async function readLogFile () {
     throw new AppError("Arquivo não encontrado.", 404)
   }
 
-  const unidadeApura = await fs.promises.readFile("./unidade/apura/Logs/log 2025-08-05.txt", "utf16le")
+  const unidadeApura = await fs.promises.readFile("./unidade/apura/Logs/log 2025-08-07.txt", "utf16le")
   const textFile = unidadeApura.split(/\r?\n/)
 
   return textFile
@@ -37,6 +37,7 @@ function parseLogs (textFile: string[]) {
   const regexBackupStart = new RegExp("\\bUm novo backup iniciou.  Número de tarefas na fila: 1\\b")
   const regexTaskRunning = new RegExp('\\bA tarefa está agora\\b')
   const regexBackupError = new RegExp("\\bERR \\b")
+  const regexAfterError = new RegExp("\\bAlterando o item de histórico para guardado\\b")
   const regexBackupFinish = new RegExp("\\bBackup terminado.  \\b")
 
   for (const line of textFile) {
@@ -54,6 +55,8 @@ function parseLogs (textFile: string[]) {
       arrayLogs.push("\n" + line)
     } else if (regexBackupError.test(line)) {
       arrayLogsError.push("\n" + line)
+    } else if (regexAfterError.test(line)) {
+      arrayLogsError.push("\n" + line)
       hasError = true
     } else if (regexBackupFinish.test(line)) {
       arrayLogsError.push("\n" + line)
@@ -61,7 +64,6 @@ function parseLogs (textFile: string[]) {
     } else if (hasError) {
       arrayLogsError.push("\n" + line)
     }
-
   }
 
   return arrayLogsError
