@@ -2,19 +2,21 @@ import { AppError } from "@/utils/AppError"
 import fs from "node:fs"
 
 /**
- * Lê um arquivo de log específico dentro de ./unidade/apura/Logs.
- * @throws {AppError} Se a pasta "apura" não for encontrada.
- * @returns {Promise<string[]>} Conteúdo do log em array de linhas
+ * Lê um arquivo de log de uma unidade específica.
+ * 
+ * @param {string} unit - Nome da unidade
+ * @param {string} logs - Nome do arquivo de log
+ * @returns {Promise<string[]>} Linhas do arquivo de log
  */
 
-async function readLogFile () {
-  const fileExistApura = fs.existsSync("./unidade/apura")
-  if (!fileExistApura) {
+async function readLogFile (unit: string, logs: string) {
+  const fileExist = fs.existsSync(`./unidade/${unit}`)
+  if (!fileExist) {
     throw new AppError("Arquivo não encontrado.", 404)
   }
 
-  const unidadeApura = await fs.promises.readFile("./unidade/apura/Logs/log 2025-08-07.txt", "utf16le")
-  const textFile = unidadeApura.split(/\r?\n/)
+  const units = await fs.promises.readFile(`./unidade/${unit}/Logs/${logs}`, "utf16le")
+  const textFile = units.split(/\r?\n/)
 
   return textFile
 }
@@ -26,8 +28,7 @@ async function readLogFile () {
  * @returns {string[]} Lista de trechos de log contendo erros
  */
 
-function parseLogs (textFile: string[]) {
-  
+function parseLogs (textFile: string[]): string[] {
   let arrayLogs: string[] = []
   let arrayLogsError: string[] = []
 
@@ -37,7 +38,7 @@ function parseLogs (textFile: string[]) {
   const regexBackupStart = new RegExp("\\bUm novo backup iniciou.  Número de tarefas na fila: 1\\b")
   const regexTaskRunning = new RegExp('\\bA tarefa está agora\\b')
   const regexBackupError = new RegExp("\\bERR \\b")
-  const regexAfterError = new RegExp("\\bAlterando o item de histórico para guardado\\b")
+  const regexAfterError = new RegExp("\\bRevertendo o módulo de trabalho\\b")
   const regexBackupFinish = new RegExp("\\bBackup terminado.  \\b")
 
   for (const line of textFile) {
@@ -70,31 +71,54 @@ function parseLogs (textFile: string[]) {
 }
 
 /**
- * Salva os logs filtrados com erro em um arquivo "teste.txt".
+ * Salva os trechos de log com erros em um arquivo na pasta ./tmp
  * 
- * @param {string[]} arrayLogsError - Lista de logs com erro
- * @returns {Promise<void>}
+ * @param {string[]} arrayLogsError - Lista de trechos de log com erros
+ * @param {string} unit - Nome da unidade
  */
 
-async function saveLogResult (arrayLogsError: string[]) {
+async function saveLogResult (arrayLogsError: string[], unit: string) {
   const refactoringLogs = arrayLogsError.join("").split("-------------------------INTERVALO---------------------------------")
   const successfullyRemovingLogs = refactoringLogs.filter(value => value.includes("ERR ")).join("\n")
+  const errorRemovingLogs = refactoringLogs.filter(value => !value.includes("ERR ")).join("\n")
 
-  // ******** Mudar para successfullyRemovingLogs ************************
-  await fs.promises.writeFile("./tmp/teste.txt", arrayLogsError.join(""))
+  // ******** Mudar para successfullyRemovingLogs e errorRemovingLogs ************************
+  const fileExist = fs.existsSync("./tmp")
+  if (!fileExist) {
+    fs.mkdirSync("./tmp")
+  }
+  
+  // await fs.promises.writeFile(`./tmp/${unit}_ERROR.txt`, successfullyRemovingLogs, "utf-8")
+  // await fs.promises.writeFile(`./tmp/${unit}_SUCCESS.txt`, errorRemovingLogs, "utf-8")
+
+  await fs.promises.writeFile(`./tmp/${unit}.txt`, arrayLogsError.join(""), "utf-8")
+}
+
+type DataUnitsLogsType = {
+  units: string
+  logs: string[]
 }
 
 /**
- * Função principal:
- * - Lê o arquivo de log
- * - Filtra apenas erros
- * - Salva resultado em arquivo
+ * Lê múltiplos arquivos de log, processa e salva os resultados por unidade.
+ * 
+ * @param {DataUnitsLogsType[]} dataUnitsLogs - Lista de unidades e respectivos arquivos de log
+ * @returns {Promise<void>}
  */
 
-async function getFileLog () {
-  const textFile = await readLogFile()
-  const result = parseLogs(textFile)
-  saveLogResult(result)
+async function getFileLog (dataUnitsLogs: DataUnitsLogsType[]) {
+  let arrrayDataSave: string[] = []
+  
+  for (const data of dataUnitsLogs) {
+    for (const log of data.logs) {
+      const textFile = await readLogFile(data.units, log)
+      const logFile = parseLogs(textFile)
+      arrrayDataSave.push(logFile.join(""))
+    }
+
+    saveLogResult(arrrayDataSave, data.units)
+    arrrayDataSave = []
+  }
 
   return
 }

@@ -5,6 +5,8 @@ import { dateSchema } from "@/schemas/log-analysis.schema"
 
 class LogAnalysis {
 
+// REMOVER
+
 /**
  * @swagger
  * /log:
@@ -19,7 +21,7 @@ class LogAnalysis {
 
   async get (request: Request, response: Response) {
     try {
-      await getFileLog()
+      //await getFileLog()
 
       response.status(200).json({ message: "Análise concluída com sucesso e retorno dos logs com erro." })
     } catch (error: any) {
@@ -27,12 +29,14 @@ class LogAnalysis {
     }
   }
 
+  // REMOVER
+
 /**
  * @swagger
  * /log/files:
  *   post:
- *     summary: Árvore de diretórios das unidades
- *     description: Retorna a estrutura de pastas das unidades contendo os arquivos de logs.
+ *     summary: Estrutura de diretórios de logs por unidade
+ *     description: Retorna a árvore de diretórios das unidades com os arquivos de log filtrados por intervalo de datas.
  *     tags: [Logs]
  *     security:
  *       - bearerAuth: []
@@ -42,36 +46,56 @@ class LogAnalysis {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - dateStart
+ *               - dateEnd
  *             properties:
  *               dateStart:
  *                 type: string
+ *                 format: date
  *                 example: "2025-08-05"
  *               dateEnd:
  *                 type: string
- *                 example: "2025-08-09"   
+ *                 format: date
+ *                 example: "2025-08-09"
  *     responses:
  *       200:
  *         description: Estrutura de diretórios encontrada
  *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   units:
+ *                     type: string
+ *                     example: "apura"
+ *                   logs:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example:
+ *                       - "log 2025-08-05.txt"
+ *                       - "log 2025-08-06.txt"
  *           text/plain:
  *             schema:
  *               type: string
  *             example: |
  *               ├── unidade
  *               |     |── apura
- *               |     |      ├──log 2025-07-31.txt
- *               |     |      ├──log 2025-08-01.txt
- *               |     |      ├──log 2025-08-04.txt
- *               |     |      └──teste1.txt
- *               |     |── chacarasto
  *               |     |      ├──log 2025-08-05.txt
- *               |     |      ├──log 2025-08-06.txt
- *               |     |      └──log 2025-08-20.txt
+ *               |     |      └──log 2025-08-06.txt
+ *               |     |── chacarasto
+ *               |     |      ├──log 2025-08-07.txt
+ *               |     |      └──log 2025-08-08.txt
  *               └─    └─
- *       500:
- *         description: Não foi possível ler a pasta Logs de determinada unidade
+ *       400:
+ *         description: Erro de validação nas datas fornecidas
  *       404:
  *         description: Não há Arquivos.
+ *       500:
+ *         description: Erro interno ao processar logs ou ler pastas
  */
   
   async byLogsFiles (request: Request, response: Response) {
@@ -88,6 +112,8 @@ class LogAnalysis {
         bodyDateStart: dateFile.data.dateStart, 
         bodyDateEnd: dateFile.data.dateEnd 
       })
+
+      await getFileLog(result)
 
       response.send(result)
     }catch (error: any) {

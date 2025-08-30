@@ -2,15 +2,21 @@ import { AppError } from "@/utils/AppError";
 import fs from "node:fs"
 import { dayjs } from "@/config/dayjs"
 
-type LogsUnitsType = {
+type LogsUnitsPathType = {
   logsUnits: string[]
   text: string[]
   unitEnd?: boolean
 }
 
+type LogsUnitsType = {
+  units: string
+  logs: string[]
+}
+
 class FileStructure {
   private dateStart: string = ""
   private dateEnd: string = ""
+  private logsUnits: LogsUnitsType[] = []
 
   /**
    * Lê a pasta ./unidade e retorna as unidades encontradas.
@@ -29,10 +35,11 @@ class FileStructure {
     }
   }
 
-  /**
-   * Monta a árvore completa das unidades e seus logs.
+   /**
+   * Monta a árvore de diretórios com unidades e seus respectivos logs.
+   * 
    * @param {string[]} units - Lista de unidades
-   * @returns {string} Estrutura em formato de árvore
+   * @returns {string} Árvore de diretórios formatada como texto
    */
 
   private structuralTree (units: string[]): string {
@@ -41,6 +48,7 @@ class FileStructure {
     // Adiciona pastas dentro da unidade
     for(const unitPath of units) {
       const resultUnits = this.checksFolders(unitPath)
+      this.logsUnits.push({ units: unitPath, logs: resultUnits })
 
       if (unitPath === units[units.length - 1]) {
         text.push(`      |     └── ${unitPath}`)
@@ -57,10 +65,10 @@ class FileStructure {
 
   /**
    * Adiciona os arquivos de log na árvore textual.
-   * @param {LogsUnitsType} params - Estrutura contendo lista de logs, texto acumulado e flag de última unidade
+   * @param {LogsUnitsPathType} params - Estrutura contendo lista de logs, texto acumulado e flag de última unidade
    */
 
-  private logsUnitsPath ({ logsUnits, text, unitEnd }: LogsUnitsType): void {
+  private logsUnitsPath ({ logsUnits, text, unitEnd }: LogsUnitsPathType): void {
     // Adiciona logs da unidade fechamento da arvore
     for (const logs of logsUnits) {
       if (logs === logsUnits[logsUnits.length - 1]) {
@@ -115,8 +123,12 @@ class FileStructure {
     }
 
     /**
-   * Função principal: gera a árvore de unidades e seus arquivos de log.
-   * @returns {string} Estrutura da árvore em formato de string
+   * Retorna a estrutura de arquivos de log filtrada por intervalo de datas.
+   *
+   * @param {Object} params - Objeto contendo datas inicial e final
+   * @param {string} params.bodyDateStart - Data inicial no formato YYYY-MM-DD
+   * @param {string} params.bodyDateEnd - Data final no formato YYYY-MM-DD
+   * @returns {LogsUnitsType[]} Estrutura com unidades e seus respectivos logs
    */
 
     getFilesTree({ bodyDateStart, bodyDateEnd }: { bodyDateStart: string, bodyDateEnd: string }) {
@@ -124,7 +136,9 @@ class FileStructure {
       this.dateEnd = bodyDateEnd
 
       const units = this.readUnits()
-      return this.structuralTree(units)
+      // ----------------- fazer com ws WebSocket ---------------------------
+      this.structuralTree(units)
+      return this.logsUnits
     }
 }
 
