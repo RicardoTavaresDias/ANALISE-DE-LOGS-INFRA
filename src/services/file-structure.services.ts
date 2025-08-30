@@ -1,6 +1,7 @@
 import { AppError } from "@/utils/AppError";
 import fs from "node:fs"
 import { dayjs } from "@/config/dayjs"
+import { broadcast } from "@/utils/broadcast-ws";
 
 type LogsUnitsPathType = {
   logsUnits: string[]
@@ -44,6 +45,7 @@ class FileStructure {
 
   private structuralTree (units: string[]): string {
     let text = [`      ├── unidade`]
+    broadcast(`     ├── unidade`)
 
     // Adiciona pastas dentro da unidade
     for(const unitPath of units) {
@@ -52,14 +54,17 @@ class FileStructure {
 
       if (unitPath === units[units.length - 1]) {
         text.push(`      |     └── ${unitPath}`)
+        broadcast(`      |     └── <b style="color: #1da5c2">${unitPath}</b>`)
         this.logsUnitsPath({ logsUnits: resultUnits, text, unitEnd: true })
         text.push(`      └─`)
+        broadcast(`     └─`)
       } else {
         text.push(`      |     ├── ${unitPath}`)
+        broadcast(`      |     ├── <b style="color: #1da5c2">${unitPath}</b>`)
         this.logsUnitsPath({ logsUnits: resultUnits, text })
       }
     }
-
+    
     return text.join("\n")
   }
 
@@ -73,12 +78,20 @@ class FileStructure {
     for (const logs of logsUnits) {
       if (logs === logsUnits[logsUnits.length - 1]) {
         unitEnd ? 
-          text.push(`      |            └──${logs}`) : 
-          text.push(`      |     |      └──${logs}`)
+          text.push(`      |             └──${logs}`) : 
+          text.push(`      |      |      └──${logs}`)
+
+           unitEnd ? 
+          broadcast(`      |                 └── <b style="color: #77767c">${logs}</b>`) : 
+          broadcast(`      |      |          └── <b style="color: #77767c">${logs}</b>`)
       }else {
         unitEnd ? 
-          text.push(`      |            ├──${logs}`) : 
-          text.push(`      |     |      ├──${logs}`)
+          text.push(`      |             ├──${logs}`) : 
+          text.push(`      |      |      ├──${logs}`)
+
+          unitEnd ? 
+          broadcast(`      |                 ├── <b style="color: #77767c">${logs}</b>`) : 
+          broadcast(`      |      |          ├── <b style="color: #77767c">${logs}</b>`)
       }
     }
   }
@@ -98,6 +111,7 @@ class FileStructure {
       
         return this.dateLogs(result)
       } catch {
+        broadcast(`      |     ├── <b style="color: #e8573f">${path} - Não foi possível ler a pasta Logs</b>`)
         throw new AppError(`Não foi possível ler a pasta Logs de ${path}`, 500)
       }
     }

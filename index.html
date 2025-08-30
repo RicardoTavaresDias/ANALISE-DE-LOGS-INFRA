@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Teste Logs</title>
-  <style>
-    body { font-family: monospace; background: #111; color: #eee; }
-    pre { white-space: pre; padding: 1rem; background: #222; border-radius: 8px; }
-    h2 { font-family: Arial, sans-serif; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Teste WebSocket</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h2>Logs recebidos</h2>
-  <button id="btnLoad">Carregar Logs</button>
-  <pre id="output">Clique em "Carregar Logs"...</pre>
+    <h1>Cliente WebSocket</h1>
+    <div id="log" style='font-family: "Lato", sans-serif'></div>
 
-  <script>
-    document.getElementById("btnLoad").addEventListener("click", async () => {
-      try {
-        const res = await fetch("http://localhost:3333/log/files", { 
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            dateStart: "2025-08-05",
-            dateEnd: "2025-08-07"
-          })
-        })        
-        if(await res.status === 500){
-          const resultJson = await res.json()
-          return document.getElementById("output").textContent = "ERROR 500: " + resultJson.message;
+    <script>
+        // Troque pelo IP/porta do seu servidor
+        const ws = new WebSocket('ws://localhost:3333')
+
+        ws.onopen = () => {
+            log('✅ Conectado ao servidor WebSocket');
+            ws.send('Olá servidor!');
+        };
+
+        ws.onmessage = (event) => {
+            log(event.data);
+        };
+
+        ws.onclose = () => {
+            log('❌ Conexão encerrada');
+        };
+
+        ws.onerror = (error) => {
+            log('⚠️ Erro: ' + error.message);
+        };
+
+        function log(message) {
+          const div = document.getElementById('log')
+          div.innerHTML += `<p style="white-space: pre; margin: 0; margin-left: 5px;" >${message}</p>`
         }
-
-        const text = await res.text()
-        document.getElementById("output").textContent = text;
-      } catch (err) {
-        document.getElementById("output").textContent = "Erro ao buscar logs: " + err;
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>

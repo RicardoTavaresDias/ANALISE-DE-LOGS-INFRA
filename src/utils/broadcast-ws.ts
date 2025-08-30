@@ -1,9 +1,9 @@
 import { ws } from '@/server';
 
 // Envia para todos clientes conectados
-function broadcast(message: any) {
+function broadcast(line: string) {
   ws.clients.forEach((client) => {
-    client.send(JSON.stringify(message))
+    client.send(line)
   })
 }
 
