@@ -34,36 +34,7 @@ class LogAnalysis {
  *                 example: "2025-08-09"
  *     responses:
  *       200:
- *         description: Estrutura de diretórios encontrada
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   units:
- *                     type: string
- *                     example: "apura"
- *                   logs:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example:
- *                       - "log 2025-08-05.txt"
- *                       - "log 2025-08-06.txt"
- *           text/plain:
- *             schema:
- *               type: string
- *             example: |
- *               ├── unidade
- *               |     |── apura
- *               |     |      ├──log 2025-08-05.txt
- *               |     |      └──log 2025-08-06.txt
- *               |     |── chacarasto
- *               |     |      ├──log 2025-08-07.txt
- *               |     |      └──log 2025-08-08.txt
- *               └─    └─
+ *         description: Arquivo Gerado com sucesso
  *       400:
  *         description: Erro de validação nas datas fornecidas
  *       404:
