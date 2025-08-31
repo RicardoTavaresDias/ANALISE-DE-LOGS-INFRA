@@ -69,7 +69,7 @@ class FsRepository {
 
       return textFile
     } catch (error: any) {
-      throw new AppError(error.message, 404)
+      throw new AppError(error.message, 500)
     }
   }
 
