@@ -5,32 +5,6 @@ import { dateSchema } from "@/schemas/log-analysis.schema"
 
 class LogAnalysis {
 
-// REMOVER
-
-/**
- * @swagger
- * /log:
- *   get:
- *     summary: Analisa arquivos de log
- *     description: Executa a varredura dos arquivos de log da unidade e retorna apenas os registros que apresentam erros.
- *     tags: [Logs]
- *     responses:
- *       200:
- *         description: Análise concluída com sucesso e retorno dos logs com erro.
- */
-
-  async get (request: Request, response: Response) {
-    try {
-      //await getFileLog()
-
-      response.status(200).json({ message: "Análise concluída com sucesso e retorno dos logs com erro." })
-    } catch (error: any) {
-      response.status(500).json({ message: error.message })
-    }
-  }
-
-  // REMOVER
-
 /**
  * @swagger
  * /log/files:

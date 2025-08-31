@@ -36,8 +36,6 @@ public structuralTree ({ units, totalUnits }: StructuralTreeType) {
   }
 }
 
-
-
 /**
  * Monta a árvore textual dos arquivos de log de cada unidade.
  * Adiciona cada log ao formato hierárquico e envia via WebSocket.
