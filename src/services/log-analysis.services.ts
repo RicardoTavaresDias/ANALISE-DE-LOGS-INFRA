@@ -1,6 +1,4 @@
 import { AppError } from "@/utils/AppError"
-import { broadcast } from "@/utils/broadcast-ws"
-import { TreeBuilder } from "@/utils/structuralTree"
 import fs from "node:fs"
 
 /**
@@ -11,7 +9,7 @@ import fs from "node:fs"
  * @returns {Promise<string[]>} Linhas do arquivo de log
  */
 
-async function readLogFile (unit: string, logs: string) {
+export async function readLogFile (unit: string, logs: string) {
   const fileExist = fs.existsSync(`./unidade/${unit}`)
   if (!fileExist) {
     throw new AppError("Arquivo não encontrado.", 404)
@@ -30,7 +28,7 @@ async function readLogFile (unit: string, logs: string) {
  * @returns {string[]} Lista de trechos de log contendo erros
  */
 
-function parseLogs (textFile: string[]): string[] {
+export function parseLogs (textFile: string[]): string[] {
   let arrayLogs: string[] = []
   let arrayLogsError: string[] = []
 
@@ -46,7 +44,8 @@ function parseLogs (textFile: string[]): string[] {
   for (const line of textFile) {
 
     if (regexBackupStart.test(line)) {
-      arrayLogs.push("\n\n-------------------------INTERVALO---------------------------------\n")
+      arrayLogs.push("\n###\n")
+      arrayLogs.push("-------------------------INTERVALO---------------------------------\n")
       arrayLogs.push("\n" + line)
       isBlocked = true
     } else if (regexTaskRunning.test(line)) {
@@ -73,69 +72,41 @@ function parseLogs (textFile: string[]): string[] {
 }
 
 /**
- * Salva os trechos de log com erros em um arquivo na pasta ./tmp
- * 
- * @param {string[]} arrayLogsError - Lista de trechos de log com erros
- * @param {string} unit - Nome da unidade
+ * Separa os logs processados em dois grupos:
+ *  - "success": trechos de log sem erros
+ *  - "error": trechos de log que contêm erros
+ *
+ * @param {string[]} arrayLogsError - Lista de trechos de log processados
+ * @returns {{ success: string, error: string }} Logs separados em sucesso e erro
  */
 
-async function saveLogResult (arrayLogsError: string[], unit: string) {
-  const refactoringLogs = arrayLogsError.join("").split("-------------------------INTERVALO---------------------------------")
-  const successfullyRemovingLogs = refactoringLogs.filter(value => value.includes("ERR ")).join("\n")
-  const errorRemovingLogs = refactoringLogs.filter(value => !value.includes("ERR ")).join("\n")
+export function splitLogs (arrayLogsError: string[]): { success: string, error: string } {
+  const refactoringLogs = arrayLogsError.join("").split("###")
 
-  // ******** Mudar para successfullyRemovingLogs e errorRemovingLogs ************************
+  return {
+    success: refactoringLogs.filter(value => !value.includes("ERR ")).join("\n").trim(),
+    error: refactoringLogs.filter(value => value.includes("ERR ")).join("\n").trim()
+  }
+}
+
+/**
+ * Cria a pasta temporária "./tmp" caso não exista e salva os logs processados em um arquivo.
+ *
+ * @param {string} path - Caminho completo do arquivo onde será salvo
+ * @param {string} content - Conteúdo que será gravado no arquivo
+ * @throws {AppError} - Se ocorrer erro ao escrever no arquivo
+ * @returns {Promise<void>} - Não retorna valor; apenas confirma a gravação
+ */
+
+export async function saveFile (path: string, content: string) {
   const fileExist = fs.existsSync("./tmp")
   if (!fileExist) {
     fs.mkdirSync("./tmp")
   }
-  
-  // await fs.promises.writeFile(`./tmp/${unit}_ERROR.txt`, successfullyRemovingLogs, "utf-8")
-  // await fs.promises.writeFile(`./tmp/${unit}_SUCCESS.txt`, errorRemovingLogs, "utf-8")
 
-  await fs.promises.writeFile(`./tmp/${unit}.txt`, arrayLogsError.join(""), "utf-8")
-}
-
-type DataUnitsLogsType = {
-  units: string
-  logs: string[]
-}
-
-/**
- * Lê múltiplos arquivos de log, processa e salva os resultados por unidade.
- * 
- * @param {DataUnitsLogsType[]} dataUnitsLogs - Lista de unidades e respectivos arquivos de log
- * @returns {Promise<void>}
- */
-
-async function getFileLog (dataUnitsLogs: DataUnitsLogsType[]) {
-  let arrrayDataSave: string[] = []
-  const totalUnits = dataUnitsLogs.map(value => value.units)
-
-  const treeBuilder = new TreeBuilder()
-  
-  for (const data of dataUnitsLogs) {
-    treeBuilder.structuralTree({ units: data.units, totalUnits: totalUnits[totalUnits.length - 1] })
-
-    for (const log of data.logs) {
-      const textFile = await readLogFile(data.units, log)
-      const logFile = parseLogs(textFile)
-
-      const totalLogs = data.logs.map(value => value)
-      treeBuilder.logsUnitsPath({ 
-        logsUnits: log, 
-        totalLogs: totalLogs[totalLogs.length - 1], 
-        unitEnd:  totalUnits[totalUnits.length - 1] === data.units
-      })
-      
-      arrrayDataSave.push(logFile.join(""))
-    }
-
-    saveLogResult(arrrayDataSave, data.units)
-    arrrayDataSave = []
+  try { 
+    await fs.promises.writeFile(path, content, "utf-8")
+  } catch (error: any) {
+    throw new AppError(error.message, 500)
   }
-
-  return broadcast('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
 }
-
-export { getFileLog }

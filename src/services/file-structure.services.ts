@@ -51,7 +51,7 @@ class FileStructure {
    * @returns {string[]} Lista de arquivos da pasta Logs
    */
 
-    checksFolders (path: string): string[] {
+    private checksFolders (path: string): string[] {
       try {
         const result =  fs.readdirSync(`./unidade/${path}/Logs`)
         if(result.length === 0) throw new AppError("Não há Arquivos.", 404)

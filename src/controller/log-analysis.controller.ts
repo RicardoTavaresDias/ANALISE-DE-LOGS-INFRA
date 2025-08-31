@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { getFileLog } from "@/services/log-analysis.services"
 import { FileStructure } from "@/services/file-structure.services"
 import { dateSchema } from "@/schemas/log-analysis.schema"
+import { getFileLog } from "@/services/log-analysis-adapter";
 
 class LogAnalysis {
 
