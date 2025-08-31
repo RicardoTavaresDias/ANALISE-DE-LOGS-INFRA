@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { GlpiBrowser } from "@/services/glpi"
+import { GlpiBrowser } from "@/application/glpi"
 import { loginSchema } from "@/schemas/glpi.schema";
 
 /**

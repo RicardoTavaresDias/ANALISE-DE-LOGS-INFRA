@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { FileStructure } from "@/services/file-structure.services"
 import { dateSchema } from "@/schemas/log-analysis.schema"
-import { getFileLog } from "@/services/log-analysis-adapter";
+import { FileLogFacade } from "@/services/log-analysis-facade";
 
 class LogAnalysis {
 
@@ -58,7 +58,9 @@ class LogAnalysis {
         bodyDateEnd: dateFile.data.dateEnd 
       })
 
-      await getFileLog(result)
+      const fileLogFacade = new FileLogFacade()
+      await fileLogFacade.processLogs(result)
+      
       response.status(200).json()
     }catch (error: any) {
       response.status(500).json({ message: error.message })

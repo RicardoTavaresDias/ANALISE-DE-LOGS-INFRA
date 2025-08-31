@@ -1,6 +1,5 @@
-import { AppError } from "@/utils/AppError";
-import fs from "node:fs"
 import { dayjs } from "@/config/dayjs"
+import { FsRepository } from "@/repositories/fs-repository";
 
 type LogsUnitsType = {
   units: string
@@ -11,22 +10,10 @@ class FileStructure {
   private dateStart: string = ""
   private dateEnd: string = ""
   private logsUnits: LogsUnitsType[] = []
+  private fsRepository: FsRepository
 
-  /**
-   * Lê a pasta ./unidade e retorna as unidades encontradas.
-   * @throws {AppError} Se a pasta estiver vazia ou não puder ser lida.
-   * @returns {string[]} Lista de unidades
-   */
-
-  private readUnits(): string[] {
-    try {
-      const result = fs.readdirSync("./unidade")
-      if(result.length === 0) throw new AppError("Não há Arquivos.", 404)
-
-      return result
-    } catch {
-      throw new AppError("Não foi possível ler a pasta ./unidade", 500)
-    }
+  constructor () {
+    this.fsRepository = new FsRepository()
   }
 
   /**
@@ -45,62 +32,56 @@ class FileStructure {
   }
 
   /**
-   * Lê a subpasta Logs de uma unidade.
+   * Lê os arquivos de log de uma unidade através do FsRepository
+   * e aplica filtro de datas.
+   *
    * @param {string} path - Nome da unidade
-   * @throws {AppError} Se a pasta Logs estiver vazia ou não puder ser lida.
-   * @returns {string[]} Lista de arquivos da pasta Logs
+   * @returns {string[]} Lista de arquivos de log filtrados por data
+   * @throws {AppError} Se não for possível ler os logs da unidade
    */
 
-    private checksFolders (path: string): string[] {
-      try {
-        const result =  fs.readdirSync(`./unidade/${path}/Logs`)
-        if(result.length === 0) throw new AppError("Não há Arquivos.", 404)
+  private checksFolders (path: string): string[] {
+    const result = this.fsRepository.showFilesFolder(`./unidade/${path}/Logs`)
+    return this.dateLogs(result)
+  }
 
-      
-        return this.dateLogs(result)
-      } catch {
-        throw new AppError(`Não foi possível ler a pasta Logs de ${path}`, 500)
-      }
-    }
-
-    /**
+   /**
    * Filtra um array de strings de log, retornando apenas as que contêm
-   * datas no intervalo de 2025-08-05 a 2025-08-07 (inclusive).
+   * datas no intervalo definido em this.dateStart e this.dateEnd (inclusive).
    *
-   * @param logsDate - Array de strings no formato 'log YYYY-MM-DD.txt'
-   * @returns Array contendo apenas os logs cujas datas estão no intervalo especificado
+   * @param {string[]} logsDate - Array de strings no formato 'log YYYY-MM-DD.txt'
+   * @returns {string[]} Array contendo apenas os logs cujas datas estão no intervalo especificado
    */
 
-    private dateLogs (logsDate: string[]): string[] {
-      const inicio = dayjs(this.dateStart)
-      const fim = dayjs(this.dateEnd)
+  private dateLogs (logsDate: string[]): string[] {
+    const inicio = dayjs(this.dateStart)
+    const fim = dayjs(this.dateEnd)
 
-      const chosenDate = logsDate.filter(date => {
-        const refatureStringDate = dayjs(date.split(" ")[1].split(".")[0])
-        return refatureStringDate.isBetween(inicio, fim, "day", "[]")
-      })
-          
-      return chosenDate
-    }
+    const chosenDate = logsDate.filter(date => {
+      const refatureStringDate = dayjs(date.split(" ")[1].split(".")[0])
+      return refatureStringDate.isBetween(inicio, fim, "day", "[]")
+    })
+        
+    return chosenDate
+  }
 
-    /**
-   * Retorna a estrutura de arquivos de log filtrada por intervalo de datas.
-   *
-   * @param {Object} params - Objeto contendo datas inicial e final
-   * @param {string} params.bodyDateStart - Data inicial no formato YYYY-MM-DD
-   * @param {string} params.bodyDateEnd - Data final no formato YYYY-MM-DD
-   * @returns {LogsUnitsType[]} Estrutura com unidades e seus respectivos logs
-   */
+  /**
+ * Retorna a estrutura de arquivos de log filtrada por intervalo de datas.
+ *
+ * @param {Object} params - Objeto contendo datas inicial e final
+ * @param {string} params.bodyDateStart - Data inicial no formato YYYY-MM-DD
+ * @param {string} params.bodyDateEnd - Data final no formato YYYY-MM-DD
+ * @returns {LogsUnitsType[]} Estrutura com unidades e seus respectivos logs
+ */
 
-    getFilesTree({ bodyDateStart, bodyDateEnd }: { bodyDateStart: string, bodyDateEnd: string }) {
-      this.dateStart = bodyDateStart
-      this.dateEnd = bodyDateEnd
+  public getFilesTree({ bodyDateStart, bodyDateEnd }: { bodyDateStart: string, bodyDateEnd: string }) {
+    this.dateStart = bodyDateStart
+    this.dateEnd = bodyDateEnd
 
-      const units = this.readUnits()
-      // ----------------- fazer com ws WebSocket ---------------------------
-      this.mapUnitsToLogs(units)
-      return this.logsUnits
-    }
+    const units = this.fsRepository.showFilesFolder('./unidade')
+    this.mapUnitsToLogs(units)
+    return this.logsUnits
+  }
 }
 
   export { FileStructure }
