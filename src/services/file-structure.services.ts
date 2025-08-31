@@ -1,13 +1,6 @@
 import { AppError } from "@/utils/AppError";
 import fs from "node:fs"
 import { dayjs } from "@/config/dayjs"
-import { broadcast } from "@/utils/broadcast-ws";
-
-type LogsUnitsPathType = {
-  logsUnits: string[]
-  text: string[]
-  unitEnd?: boolean
-}
 
 type LogsUnitsType = {
   units: string
@@ -36,63 +29,18 @@ class FileStructure {
     }
   }
 
-   /**
-   * Monta a árvore de diretórios com unidades e seus respectivos logs.
-   * 
+  /**
+   * Monta a estrutura de logs para cada unidade encontrada,
+   * chamando checksFolders e armazenando o resultado em logsUnits.
+   *
    * @param {string[]} units - Lista de unidades
-   * @returns {string} Árvore de diretórios formatada como texto
+   * @returns {void}
    */
 
-  private structuralTree (units: string[]): string {
-    let text = [`      ├── unidade`]
-    broadcast(`     ├── unidade`)
-
-    // Adiciona pastas dentro da unidade
+  private mapUnitsToLogs (units: string[]) {
     for(const unitPath of units) {
       const resultUnits = this.checksFolders(unitPath)
       this.logsUnits.push({ units: unitPath, logs: resultUnits })
-
-      if (unitPath === units[units.length - 1]) {
-        text.push(`      |     └── ${unitPath}`)
-        broadcast(`      |     └── <b style="color: #1da5c2">${unitPath}</b>`)
-        this.logsUnitsPath({ logsUnits: resultUnits, text, unitEnd: true })
-        text.push(`      └─`)
-        broadcast(`     └─`)
-      } else {
-        text.push(`      |     ├── ${unitPath}`)
-        broadcast(`      |     ├── <b style="color: #1da5c2">${unitPath}</b>`)
-        this.logsUnitsPath({ logsUnits: resultUnits, text })
-      }
-    }
-    
-    return text.join("\n")
-  }
-
-  /**
-   * Adiciona os arquivos de log na árvore textual.
-   * @param {LogsUnitsPathType} params - Estrutura contendo lista de logs, texto acumulado e flag de última unidade
-   */
-
-  private logsUnitsPath ({ logsUnits, text, unitEnd }: LogsUnitsPathType): void {
-    // Adiciona logs da unidade fechamento da arvore
-    for (const logs of logsUnits) {
-      if (logs === logsUnits[logsUnits.length - 1]) {
-        unitEnd ? 
-          text.push(`      |             └──${logs}`) : 
-          text.push(`      |      |      └──${logs}`)
-
-           unitEnd ? 
-          broadcast(`      |                 └── <b style="color: #77767c">${logs}</b>`) : 
-          broadcast(`      |      |          └── <b style="color: #77767c">${logs}</b>`)
-      }else {
-        unitEnd ? 
-          text.push(`      |             ├──${logs}`) : 
-          text.push(`      |      |      ├──${logs}`)
-
-          unitEnd ? 
-          broadcast(`      |                 ├── <b style="color: #77767c">${logs}</b>`) : 
-          broadcast(`      |      |          ├── <b style="color: #77767c">${logs}</b>`)
-      }
     }
   }
 
@@ -103,7 +51,7 @@ class FileStructure {
    * @returns {string[]} Lista de arquivos da pasta Logs
    */
 
-  private checksFolders (path: string): string[] {
+    checksFolders (path: string): string[] {
       try {
         const result =  fs.readdirSync(`./unidade/${path}/Logs`)
         if(result.length === 0) throw new AppError("Não há Arquivos.", 404)
@@ -111,7 +59,6 @@ class FileStructure {
       
         return this.dateLogs(result)
       } catch {
-        broadcast(`      |     ├── <b style="color: #e8573f">${path} - Não foi possível ler a pasta Logs</b>`)
         throw new AppError(`Não foi possível ler a pasta Logs de ${path}`, 500)
       }
     }
@@ -151,7 +98,7 @@ class FileStructure {
 
       const units = this.readUnits()
       // ----------------- fazer com ws WebSocket ---------------------------
-      this.structuralTree(units)
+      this.mapUnitsToLogs(units)
       return this.logsUnits
     }
 }

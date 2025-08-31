@@ -114,8 +114,7 @@ class LogAnalysis {
       })
 
       await getFileLog(result)
-
-      response.send(result)
+      response.status(200).json()
     }catch (error: any) {
       response.status(500).json({ message: error.message })
     }

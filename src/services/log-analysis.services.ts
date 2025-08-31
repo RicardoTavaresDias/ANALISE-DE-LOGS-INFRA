@@ -1,4 +1,6 @@
 import { AppError } from "@/utils/AppError"
+import { broadcast } from "@/utils/broadcast-ws"
+import { TreeBuilder } from "@/utils/structuralTree"
 import fs from "node:fs"
 
 /**
@@ -108,11 +110,24 @@ type DataUnitsLogsType = {
 
 async function getFileLog (dataUnitsLogs: DataUnitsLogsType[]) {
   let arrrayDataSave: string[] = []
+  const totalUnits = dataUnitsLogs.map(value => value.units)
+
+  const treeBuilder = new TreeBuilder()
   
   for (const data of dataUnitsLogs) {
+    treeBuilder.structuralTree({ units: data.units, totalUnits: totalUnits[totalUnits.length - 1] })
+
     for (const log of data.logs) {
       const textFile = await readLogFile(data.units, log)
       const logFile = parseLogs(textFile)
+
+      const totalLogs = data.logs.map(value => value)
+      treeBuilder.logsUnitsPath({ 
+        logsUnits: log, 
+        totalLogs: totalLogs[totalLogs.length - 1], 
+        unitEnd:  totalUnits[totalUnits.length - 1] === data.units
+      })
+      
       arrrayDataSave.push(logFile.join(""))
     }
 
@@ -120,7 +135,7 @@ async function getFileLog (dataUnitsLogs: DataUnitsLogsType[]) {
     arrrayDataSave = []
   }
 
-  return
+  return broadcast('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
 }
 
 export { getFileLog }
