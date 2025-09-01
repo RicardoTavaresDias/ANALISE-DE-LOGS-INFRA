@@ -1,30 +1,7 @@
 import { AppError } from "@/utils/AppError"
-import puppeteer, { Browser, Page } from "puppeteer"
+import { GlpiBrowser } from "./glpi-browser"
 
-type UserType = {
-  user: string
-  password: string
-}
-
-export class GlpiBrowser {
-  private user: UserType
-  private page!: Page
-  private browser!: Browser
-
-  constructor(login: UserType){
-    this.user = login
-  }
-
-  private async setBrowser(){
-    this.browser = await puppeteer.launch({ headless: false })
-    const page = await this.browser.newPage()
-    this.page = page
-  }
-
-  private async browserClose(){
-    this.browser.close()
-  }
-
+export class GlpiLogin extends GlpiBrowser {
   async login(){
     await this.setBrowser()
     await this.page.goto("https://glpi.ints.org.br/", { timeout: 35000 })
