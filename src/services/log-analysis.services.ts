@@ -18,26 +18,26 @@ export function parseLogs (textFile: string[]): string[] {
 
     if (regex.BackupStart.test(line)) {
       arrayLogs.push("\n###\n")
-      arrayLogs.push("-------------------------INTERVALO---------------------------------\n")
-      arrayLogs.push("\n" + line)
+      arrayLogs.push("<br>-------------------------INTERVALO---------------------------------<br><br>\n")
+      arrayLogs.push("\n" + line + "<br>")
       isBlocked = true
     } else if (regex.TaskRunning.test(line)) {
-      arrayLogs.push("\n" + line)
+      arrayLogs.push("\n" + line + "<br>")
       arrayLogsError.push(...arrayLogs)
       arrayLogs.length = 0
       isBlocked = false
     } else if (isBlocked) {
-      arrayLogs.push("\n" + line)
+      arrayLogs.push("\n" + line + "<br>")
     } else if (regex.BackupError.test(line)) {
-      arrayLogsError.push("\n" + line)
+      arrayLogsError.push("\n" + line + "<br>")
     } else if (regex.AfterError.test(line)) {
-      arrayLogsError.push("\n" + line)
+      arrayLogsError.push("\n" + line + "<br>")
       hasError = true
     } else if (regex.BackupFinish.test(line)) {
-      arrayLogsError.push("\n" + line)
+      arrayLogsError.push("\n" + line + "<br>")
       hasError = false
     } else if (hasError) {
-      arrayLogsError.push("\n" + line)
+      arrayLogsError.push("\n" + line + "<br>")
     }
   }
 
