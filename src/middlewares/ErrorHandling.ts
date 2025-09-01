@@ -13,6 +13,6 @@ export function ErrorHandling(error: any, request: Request, response: Response, 
     return
   }
 
-    response.status(error.startCode).json({ message: error.message, error: error.meta })
+    response.status(500).json({ message: error.message, error: error.meta })
     return
   }
