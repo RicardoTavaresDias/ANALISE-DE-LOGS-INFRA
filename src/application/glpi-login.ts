@@ -15,18 +15,22 @@ export class GlpiLogin {
 
     await page.waitForSelector("#c_logo", { timeout: 10000 })
     .catch(async () => {
-      const loginError = await page.evaluate(() => {
+      const error = await page.evaluate(() => {
         // @ts-ignore
         return document.querySelector('[class="center b"]')?.textContent
       })
   
-      if(loginError){
-        await this.browser.browserClose()
-        throw new AppError(loginError + " no GLPI.", 401)
-      }
-
-      await this.browser.browserClose()
-      throw new AppError("Elemento de entidade não carregou após login no Glpi.", 500) 
+      return this.loginError (error)
     })
+  }
+
+  private async loginError (error: string) {
+    if(error){
+      await this.browser.browserClose()
+      throw new AppError(error + " no GLPI.", 401)
+    }
+
+    await this.browser.browserClose()
+    throw new AppError("Elemento de entidade não carregou após login no Glpi.", 500) 
   }
 }
