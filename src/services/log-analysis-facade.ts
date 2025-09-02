@@ -78,7 +78,7 @@ class FileLogFacade {
       this.arrayDataSave = []
     }
 
-    broadcast('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
+    // broadcast('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
   }
 }
 

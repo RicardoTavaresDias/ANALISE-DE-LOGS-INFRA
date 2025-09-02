@@ -4,4 +4,4 @@ import { LogAnalysis } from "@/controller/log-analysis.controller";
 export const logAnalysisRouter = Router()
 const logAnalysisController = new LogAnalysis() 
 
-logAnalysisRouter.post("/files", logAnalysisController.byLogsFiles)
+logAnalysisRouter.post("/", logAnalysisController.byLogsFiles)

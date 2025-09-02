@@ -1,8 +1,5 @@
-//GET http://localhost:3333/log
 
-###
-
-POST http://localhost:3333/log/files
+POST http://localhost:3333/logs
 Content-Type: application/json
 
 {

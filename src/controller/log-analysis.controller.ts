@@ -7,7 +7,7 @@ class LogAnalysis {
 
 /**
  * @swagger
- * /log/files:
+ * /logs:
  *   post:
  *     summary: Estrutura de diretórios de logs por unidade
  *     description: Retorna a árvore de diretórios das unidades com os arquivos de log filtrados por intervalo de datas.
@@ -61,7 +61,7 @@ class LogAnalysis {
       const fileLogFacade = new FileLogFacade()
       await fileLogFacade.processLogs(result)
       
-      response.status(200).json()
+      response.status(200).json({ message: 'Arquivo Gerado com sucesso' })
     }catch (error: any) {
       response.status(500).json({ message: error.message })
     }

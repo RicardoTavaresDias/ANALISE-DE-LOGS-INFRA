@@ -5,4 +5,4 @@ import { loginRouter } from "./login.router"
 export const router = Router()
 
 router.use("/", loginRouter)
-router.use("/log", logAnalysisRouter)
+router.use("/logs", logAnalysisRouter)
