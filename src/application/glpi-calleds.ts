@@ -38,7 +38,7 @@ export class GlpiCalleds extends GlpiLogin {
     const frame = await iframeElement?.contentFrame()
 
     // teste
-    const content = await fs.promises.readFile(`./tmp/apura_success.txt`, "utf-8")
+    const content = await fs.promises.readFile(`./tmp/pantanal_error.txt`, "utf-8")
 
     // Digita no <p> dentro do iframe
     await frame?.evaluate((value) => {

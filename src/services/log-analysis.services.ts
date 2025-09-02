@@ -10,34 +10,52 @@ import regex from "@/lib/regex"
 export function parseLogs (textFile: string[]): string[] {
   let arrayLogs: string[] = []
   let arrayLogsError: string[] = []
+  let errorLarge: string[] = []
 
   let isBlocked: boolean = false
   let hasError: boolean = false
+  
+
+  const formatLine = (line: string) => `\n${line}<br>`
 
   for (const line of textFile) {
 
     if (regex.BackupStart.test(line)) {
       arrayLogs.push("\n###\n")
       arrayLogs.push("<br>-------------------------INTERVALO---------------------------------<br><br>\n")
-      arrayLogs.push("\n" + line + "<br>")
+      arrayLogs.push(formatLine(line))
       isBlocked = true
+
     } else if (regex.TaskRunning.test(line)) {
-      arrayLogs.push("\n" + line + "<br>")
+      arrayLogs.push(formatLine(line))
       arrayLogsError.push(...arrayLogs)
       arrayLogs.length = 0
       isBlocked = false
+
     } else if (isBlocked) {
-      arrayLogs.push("\n" + line + "<br>")
+      arrayLogs.push(formatLine(line))
+
     } else if (regex.BackupError.test(line)) {
-      arrayLogsError.push("\n" + line + "<br>")
+      errorLarge.push(formatLine("<b>" + line + "</b>"))
+
     } else if (regex.AfterError.test(line)) {
-      arrayLogsError.push("\n" + line + "<br>")
+      if (errorLarge.length > 2000) {
+        errorLarge = []
+        arrayLogsError.push(formatLine('<br><b style="color: red;">ERR - Em todo arquivo....</b><br>'))
+
+      } else {
+        arrayLogsError.push(...errorLarge)
+      }
+      
+      arrayLogsError.push(formatLine(line))
       hasError = true
+
     } else if (regex.BackupFinish.test(line)) {
-      arrayLogsError.push("\n" + line + "<br>")
+      arrayLogsError.push(formatLine(line))
       hasError = false
+
     } else if (hasError) {
-      arrayLogsError.push("\n" + line + "<br>")
+      arrayLogsError.push(formatLine(line))
     }
   }
 
