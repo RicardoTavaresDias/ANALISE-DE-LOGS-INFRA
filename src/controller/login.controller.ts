@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { loginSchema } from "@/schemas/glpi.schema";
-import { GlpiCalleds } from "@/application/glpi-calleds";
+import { GlpiFacade } from "@/application";
 
 /**
  * @swagger
@@ -67,9 +67,9 @@ export class LoginController {
         })
       }
 
-      const glpiCalleds = new GlpiCalleds(user.data)
-      await glpiCalleds.login()
-      await glpiCalleds.called()
+      const glpiFacade = new GlpiFacade(user.data)
+      await glpiFacade.processCalleds()
+
     } catch (error) {
       next(error)
     }

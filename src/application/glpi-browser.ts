@@ -1,26 +1,26 @@
 import puppeteer, { Browser, Page } from "puppeteer"
-
-type UserType = {
-  user: string
-  password: string
-}
+import { Credentials } from "./interface/ICredentials"
 
 export class GlpiBrowser {
-  public user: UserType
-  public page!: Page
-  public browser!: Browser
+  public credentials: Credentials
+  private page!: Page
+  private browser!: Browser
 
-  constructor(login: UserType){
-    this.user = login
+  constructor(login: Credentials){
+    this.credentials = login
   }
 
-  public async setBrowser(){
+  async setBrowser(){
     this.browser = await puppeteer.launch({ headless: false })
     const page = await this.browser.newPage()
     this.page = page
   }
 
-  public async browserClose(){
-    this.browser.close()
+  getPage(): Page {
+    return this.page
+  }
+
+  async browserClose(){
+    await this.browser.close()
   }
 }
