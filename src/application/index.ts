@@ -26,15 +26,15 @@ export class GlpiFacade {
     
 
     // ##########
-    const teste = taskCalled()
+    // const teste = taskCalled()
 
-    for (const unit of teste) {
-      await this.createCalled.treeUnits(standardizationUnits[unit])
-    }
+    // for (const unit of teste) {
+    //   await this.createCalled.treeUnits(standardizationUnits[unit])
+    // }
     // ##########
 
     
-   // await this.calleds.called()
+    await this.calleds.called()
 
     //await this.calleds.closeCalled()
     //await this.browser.browserClose()

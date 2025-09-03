@@ -3,7 +3,7 @@ import standardizationUnits from "@/lib/standardization-units"
 
 const fsGlpiRepository = new FsGlpiRepository()
 
-export function taskCalled (unit: string = 'apura') {
+export function taskCalled () {
   const resultTmp = fsGlpiRepository.showFolderTmp('./tmp')
   
   return resultTmp
