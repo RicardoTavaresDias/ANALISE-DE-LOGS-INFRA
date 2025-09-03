@@ -70,7 +70,6 @@ class FileLogFacade {
       }
 
       const { success, error } = splitLogs(this.arrayDataSave)
-      console.log(data.units)
       await this.fsRepository.saveFile(`./tmp/${data.units}/${data.units}_success.txt`, success, data.units)
       await this.fsRepository.saveFile(`./tmp/${data.units}/${data.units}_error.txt`, error, data.units)
       this.arrayDataSave = []
