@@ -31,21 +31,18 @@ class FileLogFacade {
   }
 
    /**
-   * Processa os logs de múltiplas unidades.
+   * Processa logs de múltiplas unidades, realizando parsing e separando os logs em sucesso/erro.
    *
    * Para cada unidade:
-   *  - Gera representação da árvore de diretórios (TreeBuilder)
-   *  - Lê os arquivos de log do sistema de arquivos (FsRepository)
-   *  - Faz parsing e acumula o conteúdo (parseLogs)
-   *  - Em caso de erro de leitura/parsing lança um AppError
-   *  - Ao final de cada unidade:
-   *      - Separa logs em sucesso/erro (splitLogs)
-   *      - Salva em "./tmp/[unidade]_success.txt" e "./tmp/[unidade]_error.txt"
-   *  - Ao final do processo de todas as unidades envia notificação via WebSocket
+   *  - Gera árvore de diretórios (TreeBuilder)
+   *  - Lê e faz parsing dos logs (FsRepository, parseLogs)
+   *  - Lança um erro (AppError) em caso de falha no processo
+   *  - Separa os logs em sucesso e erro, e salva em arquivos separados
+   *  - No final, envia notificação via WebSocket
    *
-   * @param {DataUnitsLogsType[]} dataUnitsLogs - Lista de unidades e seus arquivos de log
-   * @returns {Promise<void>} Promise resolvida após processar e salvar todos os logs
-   * @throws {AppError} Se houver falha ao ler ou processar algum log
+   * @param {DataUnitsLogsType[]} dataUnitsLogs - Lista com unidades e seus arquivos de log
+   * @returns {Promise<void>} - Promise resolvida após salvar todos os logs
+   * @throws {AppError} - Se ocorrer falha ao ler ou processar os logs
    */
 
   async processLogs (dataUnitsLogs: DataUnitsLogsType[]) {
@@ -73,8 +70,9 @@ class FileLogFacade {
       }
 
       const { success, error } = splitLogs(this.arrayDataSave)
-      await this.fsRepository.saveFile(`./tmp/${data.units}_success.txt`, success)
-      await this.fsRepository.saveFile(`./tmp/${data.units}_error.txt`, error)
+      console.log(data.units)
+      await this.fsRepository.saveFile(`./tmp/${data.units}/${data.units}_success.txt`, success, data.units)
+      await this.fsRepository.saveFile(`./tmp/${data.units}/${data.units}_error.txt`, error, data.units)
       this.arrayDataSave = []
     }
 

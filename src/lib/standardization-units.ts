@@ -1,4 +1,5 @@
-const standardizationUnits = {
+// Definindo o objeto de forma genérica
+const standardizationUnits: Record<string, string> = {
   apura: 'UBS/ESF Jardim Apurá',
   chacarasto: 'UBS Chácara Santo',
   Guacuri: 'UBS/ESF Vila Guacuri',

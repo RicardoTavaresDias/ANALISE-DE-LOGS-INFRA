@@ -73,17 +73,19 @@ class FsRepository {
     }
   }
 
-   /**
-   * Cria a pasta temporária `./tmp` caso não exista e salva o conteúdo em um arquivo.
+ /**
+   * Cria a pasta `./tmp` e uma subpasta com o nome de `units`, e salva o conteúdo em um arquivo no caminho especificado.
    *
-   * @param {string} path - Caminho completo do arquivo onde será salvo
-   * @param {string} content - Conteúdo a ser gravado
-   * @throws {AppError} - Se ocorrer erro ao salvar o arquivo
-   * @returns {Promise<void>} - Retorna apenas quando a gravação for concluída
+   * @param {string} path - Caminho completo do arquivo onde será salvo.
+   * @param {string} content - Conteúdo a ser gravado.
+   * @param {string} units - Nome da subpasta dentro de `./tmp`.
+   * @throws {AppError} - Se ocorrer erro ao salvar o arquivo.
+   * @returns {Promise<void>} - Retorna uma promessa resolvida quando a gravação for concluída.
    */
 
-  public async saveFile (path: string, content: string) {
+  public async saveFile (path: string, content: string, units: string) {
     this.mkdirFile('./tmp')
+    this.mkdirFile(`./tmp/${units}`)
 
     try { 
       await fs.promises.writeFile(path, content, "utf-8")
