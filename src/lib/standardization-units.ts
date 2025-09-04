@@ -1,4 +1,4 @@
-interface IStandardizationUnits {
+export type IStandardizationUnits = {
   name: string
   id: string
 }
@@ -18,7 +18,7 @@ const standardizationUnits: Record<string, IStandardizationUnits> = {
   cdjulia: { name: "UBS/ESF Cidade Júlia", id: "163" },
   bufalos: { name: "UBS Parque dos Búfalos", id: "210" },
   doroteia: { name: "UBS Parque Dorotéia", id: "159" },
-  pantanal: { name: "Jardim Novo Pantanal", id: "166" },
+  pantanal: { name: "UBS/ESF Jardim Novo Pantanal", id: "166" },
   umuarama: { name: "UBS Jardim Umuarama", id: "158" },
   missionaria: { name: "AMA/UBS Vila Missionária", id: "133" },
   mtvirgem: { name: "UBS/ESF Mata Virgem", id: "171" },

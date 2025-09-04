@@ -23,18 +23,24 @@ export class GlpiFacade {
   async processCalleds() {
     await this.browser.setBrowser()
     await this.login.login()
+
+    if (!standardizationUnits['Guacuri'.toLowerCase()]) {
+      this.browser.browserClose()
+      return console.log(`Arquivo Guacuri não encontrado, nome ou arquivo não existe!`)
+    }
     
+    await this.createCalled.treeUnits(standardizationUnits['Guacuri'.toLowerCase()])
 
     // ##########
     // const teste = taskCalled()
 
     // for (const unit of teste) {
-    //   await this.createCalled.treeUnits(standardizationUnits[unit])
+    //   await this.createCalled.treeUnits(standardizationUnits[unit.toLowerCase()])
     // }
     // ##########
 
     
-    await this.calleds.called()
+    //await this.calleds.called()
 
     //await this.calleds.closeCalled()
     //await this.browser.browserClose()
