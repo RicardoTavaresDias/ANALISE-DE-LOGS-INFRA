@@ -1,41 +1,49 @@
+import standardizationUnits from '../../units.json';
+
 export type IStandardizationUnits = {
   name: string
   id: string
 }
 
-// Definindo o objeto de forma genérica
-const standardizationUnits: Record<string, IStandardizationUnits> = {
-  vaparecida: { name: "UBS/ESF Vila Aparecida", id: "173" },
-  cgrande: { name: "UBS Campo Grande", id: "154" },
-  jsjorge: { name: "UBS/ESF São Jorge", id: "172" },
-  jscarlos: { name: "UBS/ESF Jardim São Carlos", id: "167" },
-  chacarasto: { name: "UBS Chácara Santo", id: "155" },
-  stoamaro: { name: "UBS Santo Amaro - Dr. Sergio Villaca Braga", id: "160" },
-  miriam1: { name: "AMA/UBS Jardim Miriam I - Manoel Soares de Oliveira", id: "130" },
-  miriam2: { name: "UBS Integral Jardim Miriam II", id: "156" },
-  selma: { name: "UBS/ESF Jardim Selma", id: "168" },
-  niteroi: { name: "UBS/ESF Jardim Niterói", id: "165" },
-  cdjulia: { name: "UBS/ESF Cidade Júlia", id: "163" },
-  bufalos: { name: "UBS Parque dos Búfalos", id: "210" },
-  doroteia: { name: "UBS Parque Dorotéia", id: "159" },
-  pantanal: { name: "UBS/ESF Jardim Novo Pantanal", id: "166" },
-  umuarama: { name: "UBS Jardim Umuarama", id: "158" },
-  missionaria: { name: "AMA/UBS Vila Missionária", id: "133" },
-  mtvirgem: { name: "UBS/ESF Mata Virgem", id: "171" },
-  constancia: { name: "AMA Especialidades Vila Constância - Dr. Vicente Octavio Guida", id: "129" },
-  imperio1: { name: "AMA/UBS Vila Império I", id: "131" },
-  imperio2: { name: "UBS/ESF Vila Império II - Dra. Gilda Tera Tahira", id: "175" },
-  mpaulista: { name: "UBS/ESF Mar Paulista", id: "170" },
-  guacuri: { name: "UBS/ESF Vila Guacuri", id: "174" },
-  laranjeiras: { name: "UBS/ESF Laranjeiras", id: "169" },
-  apura: { name: "UBS/ESF Jardim Apurá", id: "164" },
-  aeroporto: { name: "UBS Jardim Aeroporto - Dr. Massaki Udihara", id: "157" },
-  arriete: { name: "UBS Vila Arriete - Dr. Decio Pcheco Pedroso", id: "161" },
-  upadoroteia: { name: "UPA 24hs Pq. Doroteia", id: "128" },
-  upapedreira: { name: "UPA Pedreira - Dr. Cesar Antunes da Rocha", id: "176" }
+type UnitsMap = {
+  [key: string]: IStandardizationUnits;
 }
 
-export default standardizationUnits
+// Definindo o objeto de forma genérica
+export default standardizationUnits as UnitsMap
+
+
+// Definindo o objeto de forma genérica
+// const standardizationUnits: Record<string, IStandardizationUnits> = {
+//   vaparecida: { name: "UBS/ESF Vila Aparecida", id: "173" },
+//   cgrande: { name: "UBS Campo Grande", id: "154" },
+//   jsjorge: { name: "UBS/ESF São Jorge", id: "172" },
+//   jscarlos: { name: "UBS/ESF Jardim São Carlos", id: "167" },
+//   chacarasto: { name: "UBS Chácara Santo", id: "155" },
+//   stoamaro: { name: "UBS Santo Amaro - Dr. Sergio Villaca Braga", id: "160" },
+//   miriam1: { name: "AMA/UBS Jardim Miriam I - Manoel Soares de Oliveira", id: "130" },
+//   miriam2: { name: "UBS Integral Jardim Miriam II", id: "156" },
+//   selma: { name: "UBS/ESF Jardim Selma", id: "168" },
+//   niteroi: { name: "UBS/ESF Jardim Niterói", id: "165" },
+//   cdjulia: { name: "UBS/ESF Cidade Júlia", id: "163" },
+//   bufalos: { name: "UBS Parque dos Búfalos", id: "210" },
+//   doroteia: { name: "UBS Parque Dorotéia", id: "159" },
+//   pantanal: { name: "UBS/ESF Jardim Novo Pantanal", id: "166" },
+//   umuarama: { name: "UBS Jardim Umuarama", id: "158" },
+//   missionaria: { name: "AMA/UBS Vila Missionária", id: "133" },
+//   mtvirgem: { name: "UBS/ESF Mata Virgem", id: "171" },
+//   constancia: { name: "AMA Especialidades Vila Constância - Dr. Vicente Octavio Guida", id: "129" },
+//   imperio1: { name: "AMA/UBS Vila Império I", id: "131" },
+//   imperio2: { name: "UBS/ESF Vila Império II - Dra. Gilda Tera Tahira", id: "175" },
+//   mpaulista: { name: "UBS/ESF Mar Paulista", id: "170" },
+//   guacuri: { name: "UBS/ESF Vila Guacuri", id: "174" },
+//   laranjeiras: { name: "UBS/ESF Laranjeiras", id: "169" },
+//   apura: { name: "UBS/ESF Jardim Apurá", id: "164" },
+//   aeroporto: { name: "UBS Jardim Aeroporto - Dr. Massaki Udihara", id: "157" },
+//   arriete: { name: "UBS Vila Arriete - Dr. Decio Pcheco Pedroso", id: "161" },
+//   upadoroteia: { name: "UPA 24hs Pq. Doroteia", id: "128" },
+//   upapedreira: { name: "UPA Pedreira - Dr. Cesar Antunes da Rocha", id: "176" }
+// }
 
 /*
 
