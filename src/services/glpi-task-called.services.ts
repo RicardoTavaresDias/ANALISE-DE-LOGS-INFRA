@@ -1,5 +1,4 @@
 import { FsGlpiRepository } from "@/repositories/fs-glpi-repository"
-import standardizationUnits from "@/lib/standardization-units"
 
 const fsGlpiRepository = new FsGlpiRepository()
 

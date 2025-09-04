@@ -4,7 +4,6 @@ import { GlpiLogin } from "./glpi-login"
 import { GlpiCreateCalled } from "./glpi-create-called"
 import { Credentials } from "./interface/ICredentials"
 import { taskCalled } from "@/services/glpi-task-called.services"
-
 import standardizationUnits from "@/lib/standardization-units"
 
 export class GlpiFacade {
@@ -21,6 +20,8 @@ export class GlpiFacade {
   }
 
   async processCalleds() {
+    const foldersTmp = taskCalled()
+
     await this.browser.setBrowser()
     await this.login.login()
 
@@ -29,18 +30,18 @@ export class GlpiFacade {
       return console.log(`Arquivo Guacuri não encontrado, nome ou arquivo não existe!`)
     }
     
-    await this.createCalled.treeUnits(standardizationUnits['Guacuri'.toLowerCase()])
+    await this.createCalled.treeUnits(standardizationUnits['Guacuri'.toLowerCase()].name)
+    await this.createCalled.newCalled(standardizationUnits['Guacuri'.toLowerCase()])
 
     // ##########
-    // const teste = taskCalled()
-
-    // for (const unit of teste) {
-    //   await this.createCalled.treeUnits(standardizationUnits[unit.toLowerCase()])
-    // }
+      // for (const unit of teste) {
+      //   await this.createCalled.treeUnits(standardizationUnits[unit.toLowerCase()].name)
+      //   await this.createCalled.newCalled(standardizationUnits[unit.toLowerCase()])
+      // }
     // ##########
 
     
-    //await this.calleds.called()
+    //await this.calleds.calledSearch()
 
     //await this.calleds.closeCalled()
     //await this.browser.browserClose()

@@ -9,6 +9,11 @@ export class FsGlpiRepository {
   }
 
   showFolderTmp (path: string) {
+    const exist = this.existsFileTmp(path)
+    if(!exist) {
+      throw new AppError(`Não há Arquivo ${path}`, 404)
+    }
+
     try {
       const result = fs.readdirSync(path)
       if(result.length === 0) throw new AppError("Não há Arquivos.", 404)

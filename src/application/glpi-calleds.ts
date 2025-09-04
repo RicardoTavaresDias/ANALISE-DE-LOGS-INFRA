@@ -5,7 +5,7 @@ import { GlpiBrowser } from "./glpi-browser"
 export class GlpiCalleds {
   constructor(private browser: GlpiBrowser) {}
 
-  async called () {
+  async calledSearch () {
     const page = this.browser.getPage()
 
     await page.goto(

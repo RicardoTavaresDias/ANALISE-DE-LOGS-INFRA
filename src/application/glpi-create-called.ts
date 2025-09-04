@@ -1,40 +1,41 @@
 import { GlpiBrowser } from "./glpi-browser"
-import { ElementHandle, Page } from "puppeteer"
+import { ElementHandle } from "puppeteer"
 import type { IStandardizationUnits } from "@/lib/standardization-units"
-
-type NewCalledType = {
-  page: Page
-  units: IStandardizationUnits
-}
+import { AppError } from "@/utils/AppError"
 
 export class GlpiCreateCalled {
   constructor (private browser: GlpiBrowser) {}
 
-  async treeUnits (unitTeste: IStandardizationUnits) {
+  async treeUnits (unitName: IStandardizationUnits["name"]) {
     const page = this.browser.getPage()
     
     await page.waitForSelector("#global_entity_select", { timeout: 10000 })
+      .catch(() => {
+        throw new AppError("Não foi possível carregar o seletor de unidades")
+      }
+    )
+
     await page.click("#global_entity_select")
 
     await page.waitForSelector(".jstree-closed", { timeout: 10000 })
     await page.click(".jstree-icon")
 
-    await page.waitForFunction((nameUnit) => {
+    await page.waitForFunction((unitValue) => {
       //@ts-ignore
       return [...document.querySelectorAll(".jstree-anchor")]
-      .some(el => el.textContent?.includes(nameUnit));
-    }, { timeout: 10000 }, unitTeste.name) // função que chama a pasta tmp, return unit
+      .some(el => el.textContent?.includes(unitValue));
+    }, { timeout: 10000 }, unitName)
 
-    await page.evaluate((nameUnit) => {
+    await page.evaluate((unitValue) => {
       //@ts-ignore
-      const node = [...document.querySelectorAll(".jstree-children .jstree-anchor")].find(value => value.textContent.includes(nameUnit))
+      const node = [...document.querySelectorAll(".jstree-children .jstree-anchor")].find(value => value.textContent.includes(unitValue))
       node?.click()
-    }, unitTeste.name) // função que chama a pasta tmp, return unit
-
-    await this.newCalled({ page, units: unitTeste })
+    }, unitName)
   }
 
-  private async newCalled ({ page, units }: NewCalledType) {
+  async newCalled (units: IStandardizationUnits) {
+    const page = this.browser.getPage()
+
     await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000 })
 
     // Aguardar o campo tipo
