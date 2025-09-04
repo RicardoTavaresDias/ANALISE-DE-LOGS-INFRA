@@ -16,7 +16,6 @@ export class GlpiLogin {
     await page.waitForSelector("#c_logo", { timeout: 10000 })
     .catch(async () => {
       const error = await page.evaluate(() => {
-        // @ts-ignore
         return document.querySelector('[class="center b"]')?.textContent
       })
   
@@ -24,7 +23,7 @@ export class GlpiLogin {
     })
   }
 
-  private async loginError (error: string) {
+  private async loginError (error: string | undefined) {
     if(error){
       await this.browser.browserClose()
       throw new AppError(error + " no GLPI.", 401)

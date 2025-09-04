@@ -16,19 +16,16 @@ export class GlpiCreateCalled {
     )
 
     await page.click("#global_entity_select")
-
     await page.waitForSelector(".jstree-closed", { timeout: 10000 })
     await page.click(".jstree-icon")
 
     await page.waitForFunction((unitValue) => {
-      //@ts-ignore
       return [...document.querySelectorAll(".jstree-anchor")]
       .some(el => el.textContent?.includes(unitValue));
     }, { timeout: 10000 }, unitName)
 
     await page.evaluate((unitValue) => {
-      //@ts-ignore
-      const node = [...document.querySelectorAll(".jstree-children .jstree-anchor")].find(value => value.textContent.includes(unitValue))
+      const node = [...document.querySelectorAll<HTMLSelectElement>(".jstree-children .jstree-anchor")].find(value => value.textContent.includes(unitValue))
       node?.click()
     }, unitName)
   }
@@ -40,47 +37,43 @@ export class GlpiCreateCalled {
 
     // Aguardar o campo tipo
     await page.waitForFunction(() => {
-      //@ts-ignore
       return document.querySelector('[id^="dropdown_type"]')
     }, { timeout: 10000 })
 
     // Tipo - Requisição
     await page.evaluate(() => {
-      //@ts-ignore
-      document.querySelector('[id^="dropdown_type"]').value = "2"
-      //@ts-ignore
-      document.querySelector('[id^="dropdown_type"]').onchange()
+      document.querySelector<HTMLSelectElement>('[id^="dropdown_type"]')!.value = "2"
+      document.querySelector<any>('[id^="dropdown_type"]').onchange()
     })
 
     // Aguardar o campo tipo
     await page.waitForFunction(() => {
-      //@ts-ignore
       return document.querySelector('[id^="dropdown_type"]')
     }, { timeout: 10000 })
 
     await page.evaluate((value) => {
-      //@ts-ignore => Categoria - BACKUP > Acompanhamento Diario Rotina de Backup
-      document.querySelector('[id^="select2-dropdown_itilcategories"]').innerHTML = 
+      //Categoria - BACKUP > Acompanhamento Diario Rotina de Backup
+      document.querySelector('[id^="select2-dropdown_itilcategories"]')!.innerHTML = 
         '<option value="1030" selected="selected">BACKUP > Acompanhamento Diario Rotina de Backup</option>'
 
-      //@ts-ignore => Requerente (user)
-      document.querySelector('[id^="dropdown__users_id_requester"]').innerHTML = 
+      //Requerente (user)
+      document.querySelector('[id^="dropdown__users_id_requester"]')!.innerHTML = 
         '<option value="0" selected="selected">-----</option>'
 
-      //@ts-ignore => Atribuído para (user)
-      document.querySelector('[id^="dropdown__users_id_assign"]').innerHTML = 
+      //Atribuído para (user)
+      document.querySelector<HTMLSelectElement>('[id^="dropdown__users_id_assign"]')!.innerHTML = 
         '<option value="0" selected="selected">-----</option>'
 
-      //@ts-ignore => Requerente GROUP
-      document.querySelector('[id^="dropdown__groups_id_requester"]').innerHTML = 
+      //Requerente GROUP
+      document.querySelector('[id^="dropdown__groups_id_requester"]')!.innerHTML = 
         `<option value="${value.id}" selected="selected">${value.name}</option>`
 
-      //@ts-ignore => Observador GROUP
-      document.querySelector('[id^="dropdown__groups_id_observer"]').innerHTML = 
+      //Observador GROUP
+      document.querySelector('[id^="dropdown__groups_id_observer"]')!.innerHTML = 
         `<option value="${value.id}" selected="selected">${value.name}</option>`
 
-      //@ts-ignore => Atribuído para GROUP
-      document.querySelector('[id^="dropdown__groups_id_assign"]').innerHTML = 
+      //Atribuído para GROUP
+      document.querySelector('[id^="dropdown__groups_id_assign"]')!.innerHTML = 
         '<option value="145" selected="selected">Infraestrutura T.I</option>'
     }, units)
 
@@ -92,7 +85,6 @@ export class GlpiCreateCalled {
     const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
     const frame = await iframeElement?.contentFrame()
     await frame?.evaluate(() => {
-      //@ts-ignore
       const p = document.querySelector('p')
       if (p) {
         p.textContent = 'Validar a conexão do FTP e evidenciar.'

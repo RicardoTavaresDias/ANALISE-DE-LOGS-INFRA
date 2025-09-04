@@ -19,15 +19,13 @@ export class GlpiCalleds {
     */
 
     const urlIdCalled = await page.evaluate(() => {
-      //@ts-ignore
-      return [...document.querySelectorAll('[id^="Ticket"]')][0].href
+      return [...document.querySelectorAll<any>('[id^="Ticket"]')][0].href
     })
     
     await page.goto(urlIdCalled, { timeout: 35000 })
 
      await page.evaluate(() => {
-      //@ts-ignore
-      document.querySelectorAll('.ui-tabs-nav li a')[1].click() //Processando chamado
+      document.querySelectorAll<HTMLSelectElement>('.ui-tabs-nav li a')[1].click() //Processando chamado
     })
 
     this.taskCalled()
@@ -48,17 +46,18 @@ export class GlpiCalleds {
     // Acessa o conteúdo do iframe como um frame separado
     const frame = await iframeElement?.contentFrame()
 
-    // teste
+    // ############ Apenas Teste
     const content = await fs.promises.readFile(`./tmp/pantanal_error.txt`, "utf-8")
 
     // Digita no <p> dentro do iframe
     await frame?.evaluate((value) => {
-      //@ts-ignore
       const p = document.querySelector('p')
       if (p) {
         p.textContent = value
       }
     }, content)
+
+    // ############
 
     await page.click('.x-button')
   }
