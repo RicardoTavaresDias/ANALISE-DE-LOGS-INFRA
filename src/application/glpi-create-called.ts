@@ -1,5 +1,5 @@
 import { GlpiBrowser } from "./glpi-browser"
-import { ElementHandle } from "puppeteer"
+import { ElementHandle, Page } from "puppeteer"
 import type { IStandardizationUnits } from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
 
@@ -36,9 +36,7 @@ export class GlpiCreateCalled {
     await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000 })
 
     // Aguardar o campo tipo
-    await page.waitForFunction(() => {
-      return document.querySelector('[id^="dropdown_type"]')
-    }, { timeout: 10000 })
+    await this.waitForFunction(page, '[id^="dropdown_type"]')
 
     // Tipo - Requisição
     await page.evaluate(() => {
@@ -47,21 +45,28 @@ export class GlpiCreateCalled {
     })
 
     // Aguardar o campo tipo
-    await page.waitForFunction(() => {
-      return document.querySelector('[id^="dropdown_type"]')
-    }, { timeout: 10000 })
+    await this.waitForFunction(page, '[id^="dropdown_type"]')
+
+    //Categoria - BACKUP > Acompanhamento Diario Rotina de Backup 
+    await page.evaluate(() => {
+      const category = document.querySelector<HTMLSelectElement>('select[id^="dropdown_itilcategories"]')
+      if (category) {
+          category.innerHTML = '<option value="1030">BACKUP > Acompanhamento Diario Rotina de Backup</option>'
+          category.value = '1030'
+          $(category).trigger('change') // realizando mudança no select2 Ajax
+      }
+    })
+
+    // Aguardar o campo Categoria
+    await this.waitForFunction(page, 'select[id^="dropdown_itilcategories"]')
 
     await page.evaluate((value) => {
-      //Categoria - BACKUP > Acompanhamento Diario Rotina de Backup
-      document.querySelector('[id^="select2-dropdown_itilcategories"]')!.innerHTML = 
-        '<option value="1030" selected="selected">BACKUP > Acompanhamento Diario Rotina de Backup</option>'
-
       //Requerente (user)
       document.querySelector('[id^="dropdown__users_id_requester"]')!.innerHTML = 
         '<option value="0" selected="selected">-----</option>'
 
-      //Atribuído para (user)
-      document.querySelector<HTMLSelectElement>('[id^="dropdown__users_id_assign"]')!.innerHTML = 
+      //Atribuído para (user) ??
+      document.querySelectorAll<HTMLSelectElement>('[id^="dropdown__users_id_assign"]')[0].innerHTML =
         '<option value="0" selected="selected">-----</option>'
 
       //Requerente GROUP
@@ -91,10 +96,21 @@ export class GlpiCreateCalled {
       }
     })
 
-    /*
-      # botão Adicionar
-        document.querySelector(".submit").click()
-    */
-    //await page.click(`[type="submit"]`)
+    // await page.click('.submit')
+
+    // // Aguardar menssagem de sucesso
+    // await this.waitForFunction(page, '[id^="message_after_redirect"]')
+
+    // const message = await page.evaluate(() => {
+    //   return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
+    // })
+
+    // console.log('Chamado criado ' + message)
+  }
+
+  private async waitForFunction (page: Page, selector: string) {
+    return await page.waitForFunction((value) => {
+      return document.querySelector(value)
+    }, { timeout: 10000 }, selector)
   }
 }
