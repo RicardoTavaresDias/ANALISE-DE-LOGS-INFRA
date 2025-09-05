@@ -30,7 +30,17 @@ export class FsGlpiRepository {
       throw new AppError("Arquivo não encontrado.", 404)
     }
 
-    const readResult = await fs.promises.readFile(`./tmp/${unit}}`, "utf-8") 
-    return readResult
+    const contentSucess = await fs.promises.readFile(`./tmp/${unit}/${unit}_success.txt`, "utf-8")
+    const contentError = await fs.promises.readFile(`./tmp/${unit}/${unit}_error.txt`, "utf-8") 
+
+    return { contentSucess, contentError }
+  }
+
+  removeFolder (unit: string) {
+    if (!this.existsFileTmp(`./tmp/${unit}`)) {
+      throw new AppError(`A pasta ${unit} não existe para ser excluido.`, 404)
+    }
+    
+    fs.promises.rmdir(`./tmp/${unit}`, { recursive: true })
   }
 }

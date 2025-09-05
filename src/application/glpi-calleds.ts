@@ -83,10 +83,19 @@ export class GlpiCalleds {
 
     // Adicionar botão
     await page.click('.submit')
+    
+    await this.solutionApproval(page)
   }
 
-  private solutionApproval (page: Page) {
+  private async solutionApproval (page: Page) {
+
     // Aprovar satisfação
-    document.querySelectorAll<HTMLSelectElement>(".submit")[1].click()
+    await page.waitForFunction(() => {
+      return document.querySelector<any>('.submit')[1]
+    })
+
+    await page.evaluate(() => {
+      document.querySelectorAll<HTMLSelectElement>(".submit")[1].click()
+    })
   }
 }

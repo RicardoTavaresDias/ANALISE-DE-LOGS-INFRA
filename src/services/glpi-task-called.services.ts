@@ -1,4 +1,4 @@
-import { FsGlpiRepository } from "@/repositories/fs-glpi-repository"
+import { FsGlpiRepository,  } from "@/repositories/fs-glpi-repository"
 
 const fsGlpiRepository = new FsGlpiRepository()
 
@@ -8,8 +8,16 @@ export function taskCalled () {
   return resultTmp
 }
 
-export function readTaskCalled (units: string[], unit: string) {
-  const resultUnits = units.map(value => fsGlpiRepository.showFolderTmp(`./tmp/${value}`))
-  
-  return [...resultUnits.filter(value => value[0].includes(unit))]
+export async function readTaskCalled (units: string) {
+  const result = await fsGlpiRepository.read(units)
+
+  const text = result.contentError.length === 0 ? 
+    result.contentSucess : 
+    result.contentSucess + result.contentError
+
+  return { logs: text, isError: result.contentError.length === 0 }
+}
+
+export function removeFolderUnit (unit: string) {
+  return fsGlpiRepository.removeFolder(unit)
 }
