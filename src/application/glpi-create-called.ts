@@ -9,13 +9,21 @@ export class GlpiCreateCalled {
   async treeUnits (unitName: IStandardizationUnits["name"]) {
     const page = this.browser.getPage()
     
-    await page.waitForSelector("#global_entity_select", { timeout: 10000 })
-      .catch(() => {
-        throw new AppError("Não foi possível carregar o seletor de unidades")
-      }
-    )
+    //@ts-ignore
+    await page.waitForSelector('.loadingindicator', { state: 'hidden', timeout: 10000 })
+    .catch (() => {
+      throw new AppError("Não foi possível carregar o seletor de unidades")
+    })
 
-    await page.click("#global_entity_select")
+    // await page.waitForFunction(() => {
+    //   return document.querySelector("#ui-tabs-1 table")
+    // }, { timeout: 10000 })
+
+    await page.evaluate(() => {
+      document.querySelector<HTMLSelectElement>("#global_entity_select")!.click()
+    })
+
+    //await page.click('#global_entity_select')
     await page.waitForSelector(".jstree-closed", { timeout: 10000 })
     await page.click(".jstree-icon")
 
@@ -96,16 +104,17 @@ export class GlpiCreateCalled {
       }
     })
 
-    // await page.click('.submit')
+    await page.click('.submit')
 
-    // // Aguardar menssagem de sucesso
-    // await this.waitForFunction(page, '[id^="message_after_redirect"]')
+    // Aguardar menssagem de sucesso
+    await this.waitForFunction(page, '[id^="message_after_redirect"]')
 
-    // const message = await page.evaluate(() => {
-    //   return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
-    // })
+    const message = await page.evaluate(() => {
+      return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
+    })
 
-    // console.log('Chamado criado ' + message)
+    console.log('Chamado criado ' + message)
+    return message
   }
 
   private async waitForFunction (page: Page, selector: string) {

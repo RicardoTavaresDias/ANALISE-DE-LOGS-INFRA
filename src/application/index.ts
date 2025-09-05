@@ -6,6 +6,8 @@ import { Credentials } from "./interface/ICredentials"
 import { taskCalled } from "@/services/glpi-task-called.services"
 import standardizationUnits from "@/lib/standardization-units"
 
+import fs from "node:fs"
+
 export class GlpiFacade {
   private browser: GlpiBrowser
   private login: GlpiLogin
@@ -21,17 +23,18 @@ export class GlpiFacade {
 
   async processCalleds() {
     const foldersTmp = taskCalled()
+    console.log(foldersTmp)
 
-    await this.browser.setBrowser()
-    await this.login.login()
+    //await this.browser.setBrowser()
+    //await this.login.login()
 
-    if (!standardizationUnits['Guacuri'.toLowerCase()]) {
+    if (!standardizationUnits['pantanal'.toLowerCase()]) {
       this.browser.browserClose()
       return console.log(`Arquivo Guacuri não encontrado, nome ou arquivo não existe!`)
     }
     
-    await this.createCalled.treeUnits(standardizationUnits['Guacuri'.toLowerCase()].name)
-    await this.createCalled.newCalled(standardizationUnits['Guacuri'.toLowerCase()])
+    //await this.createCalled.treeUnits(standardizationUnits['pantanal'.toLowerCase()].name)
+    //const resultIdCalled = await this.createCalled.newCalled(standardizationUnits['pantanal'.toLowerCase()]) // funcionando
 
     // ##########
       // for (const unit of teste) {
@@ -41,8 +44,26 @@ export class GlpiFacade {
     // ##########
 
     
-    //await this.calleds.calledSearch()
+    //await this.calleds.calledSearch('226623')
 
+    // ############ Apenas Teste
+      const contentSucess = await fs.promises.readFile(`./tmp/pantanal_success.txt`, "utf-8")
+      const contentError = await fs.promises.readFile(`./tmp/pantanal_error.txt`, "utf-8")
+
+      const text = contentError.length === 0 ? contentSucess : contentSucess + contentError
+      //await this.calleds.taskCalled(text)
+
+      console.log(contentError.length === 0)
+      console.log(text)
+
+      if(contentError.length === 0) {
+        //await this.calleds.closeCalled()
+      } 
+
+      //await this.browser.browserClose()
+    // ############
+
+    //await this.calleds.taskCalled(content)
     //await this.calleds.closeCalled()
     //await this.browser.browserClose()
   }
