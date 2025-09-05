@@ -41,7 +41,7 @@ export class GlpiCreateCalled {
   async newCalled (units: IStandardizationUnits) {
     const page = this.browser.getPage()
 
-    await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000 })
+    await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000, waitUntil: 'networkidle0' })
 
     // Aguardar o campo tipo
     await this.waitForFunction(page, '[id^="dropdown_type"]')
@@ -103,6 +103,9 @@ export class GlpiCreateCalled {
         p.textContent = 'Validar a conexão do FTP e evidenciar.'
       }
     })
+
+    // Espera o iframe aparecer
+    await page.waitForSelector('iframe[id^="content"]');
 
     await page.click('.submit')
 

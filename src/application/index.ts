@@ -39,6 +39,8 @@ export class GlpiFacade {
       const responseUnits = await readTaskCalled(unit)
       if(responseUnits.isError){
         await this.calleds.taskCalled(responseUnits.logs)
+        
+        console.log("erro vazio e fecha chamado")
         await this.calleds.closeCalled()
       } else {
         await this.calleds.taskCalled(responseUnits.logs)

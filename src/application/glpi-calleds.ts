@@ -44,14 +44,17 @@ export class GlpiCalleds {
       }
     }, textLogs)
 
+    // espera o iframe reaparecer
+    await page.waitForSelector('iframe[id^="content"]', { visible: true });
+ 
     await page.click('.x-button')
   }
 
   async closeCalled () {
     const page = this.browser.getPage()
 
-    await page.waitForSelector('li.solution', { visible: true })
-    await page.click('li.solution') 
+    await page.waitForSelector('.solution', { visible: true })
+    await page.click('.solution') 
 
     await page.waitForFunction(() => {
       return document.querySelector<any>('select[id^="dropdown_solutiontemplates"]')
@@ -81,9 +84,12 @@ export class GlpiCalleds {
       }
     }, credentialsUser)
 
+    // Espera o iframe aparecer
+    await page.waitForSelector('iframe[id^="content"]');
+
     // Adicionar botão
     await page.click('.submit')
-    
+
     await this.solutionApproval(page)
   }
 
