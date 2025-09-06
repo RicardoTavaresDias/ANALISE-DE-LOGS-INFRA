@@ -32,6 +32,27 @@ export class GlpiCreateCalled {
 
     await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000, waitUntil: 'networkidle0' })
 
+    await this.fillTypeField(page)
+    await this.selectCategory(page)
+    await this.setGroups(page, units)
+    await this.fillTitle(page)
+    await this.fillDescription(page)
+
+    await page.click('.submit')
+
+    // Aguardar menssagem de sucesso
+    await this.waitForFunction(page, '[id^="message_after_redirect"]')
+
+    const message = await page.evaluate(() => {
+      return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
+    })
+
+    console.log('Chamado criado ' + message)
+    return message
+  }
+
+  // Campo tipo
+  private async fillTypeField (page: Page) {
     // Aguardar o campo tipo
     await this.waitForFunction(page, '[id^="dropdown_type"]')
 
@@ -43,7 +64,10 @@ export class GlpiCreateCalled {
 
     // Aguardar o campo tipo
     await this.waitForFunction(page, '[id^="dropdown_type"]')
+  }
 
+  // Campo Categoria
+  private async selectCategory (page: Page) {
     //Categoria - BACKUP > Acompanhamento Diario Rotina de Backup 
     await page.evaluate(() => {
       const category = document.querySelector<HTMLSelectElement>('select[id^="dropdown_itilcategories"]')
@@ -56,8 +80,11 @@ export class GlpiCreateCalled {
 
     // Aguardar o campo Categoria
     await this.waitForFunction(page, 'select[id^="dropdown_itilcategories"]')
+  }
 
-    await page.evaluate((value) => {
+  //Campos Requerente, Observador e Atribuído para
+  private async setGroups (page: Page, units: IStandardizationUnits) {
+     await page.evaluate((value) => {
       //Requerente (user)
       document.querySelector('[id^="dropdown__users_id_requester"]')!.innerHTML = 
         '<option value="0" selected="selected">-----</option>'
@@ -78,11 +105,16 @@ export class GlpiCreateCalled {
       document.querySelector('[id^="dropdown__groups_id_assign"]')!.innerHTML = 
         '<option value="145" selected="selected">Infraestrutura T.I</option>'
     }, units)
+  }
 
-    // Título
+  // Campo Título
+  private async fillTitle (page: Page) {
     await page.type("#mainformtable4 input", 'Verificar backup FTP Servidor')
+  }
 
-    // Descrição => Espera o iframe aparecer e enviar texto no campo descrição
+  // Campo Descrição
+  private async fillDescription (page: Page) {
+     // Descrição => Espera o iframe aparecer e enviar texto no campo descrição
     await page.waitForSelector('iframe[id^="content"]');
     const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
     const frame = await iframeElement?.contentFrame()
@@ -95,18 +127,6 @@ export class GlpiCreateCalled {
 
     // Espera o iframe aparecer
     await page.waitForSelector('iframe[id^="content"]');
-
-    await page.click('.submit')
-
-    // Aguardar menssagem de sucesso
-    await this.waitForFunction(page, '[id^="message_after_redirect"]')
-
-    const message = await page.evaluate(() => {
-      return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
-    })
-
-    console.log('Chamado criado ' + message)
-    return message
   }
 
   private async waitForFunction (page: Page, selector: string) {
