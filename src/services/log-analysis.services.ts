@@ -59,6 +59,7 @@ export function parseLogs (textFile: string[]): string[] {
     }
   }
 
+  arrayLogsError.push(formatLine("\n<br>-------------------------INTERVALO---------------------------------<br>"))
   return arrayLogsError
 }
 
