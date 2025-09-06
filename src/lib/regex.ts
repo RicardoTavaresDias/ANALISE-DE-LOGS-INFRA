@@ -3,7 +3,7 @@ const RegExpLogs = {
   TaskRunning: new RegExp('\\bA tarefa está agora\\b'),
   BackupError: new RegExp("\\bERR \\b"),
   AfterError: new RegExp("\\bRevertendo o módulo de trabalho\\b"),
-  BackupFinish: new RegExp("\\bBackup terminado\\b")
+  BackupFinish: new RegExp("\\bBackup terminado.  Erros\\b")
 }
 
 export default RegExpLogs
