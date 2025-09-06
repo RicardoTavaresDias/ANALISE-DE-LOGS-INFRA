@@ -1,5 +1,6 @@
 import puppeteer, { Browser, Page } from "puppeteer"
 import { Credentials } from "./interface/ICredentials"
+import { env } from "@/config/env"
 
 /**
  * Classe responsável pelo gerenciamento do navegador Puppeteer
@@ -28,7 +29,7 @@ export class GlpiBrowser {
    */
 
   public async setBrowser(){
-    this.browser = await puppeteer.launch({ headless: false })
+    this.browser = await puppeteer.launch({ headless: env.HEADLESS })
     const page = await this.browser.newPage()
     this.page = page
   }
