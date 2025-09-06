@@ -12,13 +12,18 @@ export class GlpiCalleds {
       { timeout: 35000 }
     )
 
-    // aguadar Processando chamado 
+    // aguardar aba de processamento
     await page.waitForFunction(() => {
-      return document.querySelector<any>('[id^="ui-id-5"]').href
-    })
+      return !!document.querySelector('[id^="ui-id-5"]')
+    }, { timeout: 15000 })
     
     // Processando chamado 
     await page.click('[id^="ui-id-5"]') 
+
+    // garantir que a aba de tarefas vai aparecer
+    await page.waitForFunction(() => {
+      return !!document.querySelector('li.task')
+    }, { timeout: 15000 })
   }
 
   async taskCalled (textLogs: string) {
@@ -44,21 +49,29 @@ export class GlpiCalleds {
       }
     }, textLogs)
 
-    // espera o iframe reaparecer
-    await page.waitForSelector('iframe[id^="content"]', { visible: true });
+    // aguardar que o botão X esteja pronto
+    await page.waitForFunction(() => {
+      return !!document.querySelector('.x-button')
+    }, { timeout: 10000 })
  
     await page.click('.x-button')
+
+    // Esperar que a aba solution esteja disponível antes de chamar closeCalled
+    await page.waitForFunction(() => {
+      return !!document.querySelector('li.solution')
+    }, { timeout: 15000 })
   }
 
   async closeCalled () {
     const page = this.browser.getPage()
 
-    await page.waitForSelector('.solution', { visible: true })
-    await page.click('.solution') 
+    await page.waitForSelector('li.solution', { visible: true })
+    await page.click('li.solution') 
 
+    // esperar selects carregarem
     await page.waitForFunction(() => {
-      return document.querySelector<any>('select[id^="dropdown_solutiontemplates"]')
-    })
+      return !!document.querySelector('select[id^="dropdown_solutiontemplates"]')
+    }, { timeout: 15000 })
     
     await page.evaluate(() => {
       // Modelo de solução
@@ -73,7 +86,7 @@ export class GlpiCalleds {
     const word = this.browser.credentials.user.split('.')[0]
     const credentialsUser = word[0].toUpperCase().concat(word.substring(1))
 
-    // Descrição
+    // Descrição no iframe
     await page.waitForSelector('iframe[id^="content"]');
     const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
     const frame = await iframeElement?.contentFrame()
@@ -94,14 +107,18 @@ export class GlpiCalleds {
   }
 
   private async solutionApproval (page: Page) {
-
     // Aprovar satisfação
     await page.waitForFunction(() => {
-      return document.querySelector<any>('.submit')[1]
+      return document.querySelectorAll('.submit')[1]
     })
 
     await page.evaluate(() => {
       document.querySelectorAll<HTMLSelectElement>(".submit")[1].click()
     })
+
+    // esperar selects carregarem
+    await page.waitForFunction(() => {
+      return !!document.querySelector(".rich_text_container")
+    }, { timeout: 15000 })
   }
 }

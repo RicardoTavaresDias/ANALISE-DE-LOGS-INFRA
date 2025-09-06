@@ -5,6 +5,7 @@ import { GlpiCreateCalled } from "./glpi-create-called"
 import { Credentials } from "./interface/ICredentials"
 import { taskCalled, readTaskCalled, removeFolderUnit } from "@/services/glpi-task-called.services"
 import standardizationUnits from "@/lib/standardization-units"
+import { AppError } from "@/utils/AppError"
 
 export class GlpiFacade {
   private browser: GlpiBrowser
@@ -26,29 +27,44 @@ export class GlpiFacade {
     await this.login.login()
    
     for (const unit of foldersTmp) {
-      if (!standardizationUnits[unit.toLowerCase()]) {
+      const unitStandard = standardizationUnits[unit.toLowerCase()]
+      if (!unitStandard) {
         this.browser.browserClose()
-        return console.log(`Arquivo Guacuri não encontrado, nome ou arquivo não existe!`)
+        console.log(`❌ Unidade "${unit}" não encontrada no arquivo de padronização!`)
+        return
       }
 
-      await this.createCalled.treeUnits(standardizationUnits[unit.toLowerCase()].name)
-      const IdCalledCreate = await this.createCalled.newCalled(standardizationUnits[unit.toLowerCase()])
+      try {
+        // Selecionar unidade na árvore
+        await this.createCalled.treeUnits(standardizationUnits[unit.toLowerCase()].name)
 
-      await this.calleds.calledSearch(IdCalledCreate)
-
-      const responseUnits = await readTaskCalled(unit)
-      if(responseUnits.isError){
-        await this.calleds.taskCalled(responseUnits.logs)
+        // Criar chamado
+        const IdCalledCreate = await this.createCalled.newCalled(standardizationUnits[unit.toLowerCase()])
         
-        console.log("erro vazio e fecha chamado")
-        await this.calleds.closeCalled()
-      } else {
-        await this.calleds.taskCalled(responseUnits.logs)
-      }
+        // Abrir chamado recém-criado
+        await this.calleds.calledSearch(IdCalledCreate)
 
-      removeFolderUnit(unit)
+        // Agrupa todos os logs refaturado com sucess e error
+        const responseUnits = await readTaskCalled(unit)
+        if(responseUnits.isError){
+          // Inserir tarefa e fecha chamado => log sem Err
+          await this.calleds.taskCalled(responseUnits.logs)
+          await this.calleds.closeCalled()
+        } else {
+          // Inserir tarefa e deixa aberto o chamado => logs com Err
+          await this.calleds.taskCalled(responseUnits.logs)
+        }
+
+        // Remover pasta temporária da unidade
+        console.log("removeFolderUnit", unit)
+        removeFolderUnit(unit)
+      } catch (error: any) {
+        console.error(`❌ Erro ao processar unidade "${unit}":`, error.message || error)
+        throw new AppError(`Falha no processamento da unidade ${unit}`, 500)
+      }
     }
 
     await this.browser.browserClose()
+    console.log("🎉 Processamento de chamados concluído!")
   }
 }

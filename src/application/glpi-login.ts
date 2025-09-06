@@ -21,6 +21,12 @@ export class GlpiLogin {
   
       return this.loginError (error)
     })
+
+    //@ts-ignore
+    await page.waitForSelector('.loadingindicator', { state: 'hidden', timeout: 10000 })
+    .catch (() => {
+      throw new AppError("Não foi possível carregar o seletor de unidades")
+    })
   }
 
   private async loginError (error: string | undefined) {

@@ -8,22 +8,12 @@ export class GlpiCreateCalled {
 
   async treeUnits (unitName: IStandardizationUnits["name"]) {
     const page = this.browser.getPage()
-    
-    //@ts-ignore
-    await page.waitForSelector('.loadingindicator', { state: 'hidden', timeout: 10000 })
-    .catch (() => {
-      throw new AppError("Não foi possível carregar o seletor de unidades")
-    })
 
-    // await page.waitForFunction(() => {
-    //   return document.querySelector("#ui-tabs-1 table")
-    // }, { timeout: 10000 })
-
+    // Seleciona a arvore das unidades REGIAO SACA
     await page.evaluate(() => {
       document.querySelector<HTMLSelectElement>("#global_entity_select")!.click()
     })
 
-    //await page.click('#global_entity_select')
     await page.waitForSelector(".jstree-closed", { timeout: 10000 })
     await page.click(".jstree-icon")
 
