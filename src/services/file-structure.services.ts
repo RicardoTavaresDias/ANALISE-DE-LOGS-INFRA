@@ -1,5 +1,6 @@
 import { dayjs } from "@/config/dayjs"
 import { FsRepository } from "@/repositories/fs-repository";
+import { env } from "@/config/env"
 
 type LogsUnitsType = {
   units: string
@@ -41,7 +42,7 @@ class FileStructure {
    */
 
   private checksFolders (path: string): string[] {
-    const result = this.fsRepository.showFilesFolder(`./unidade/${path}/Logs`)
+    const result = this.fsRepository.showFilesFolder(`${env.PATCHFILE}/${path}/Logs`)
     return this.dateLogs(result)
   }
 
@@ -78,7 +79,7 @@ class FileStructure {
     this.dateStart = bodyDateStart
     this.dateEnd = bodyDateEnd
 
-    const units = this.fsRepository.showFilesFolder('./unidade')
+    const units = this.fsRepository.showFilesFolder(env.PATCHFILE)
     this.mapUnitsToLogs(units)
     return this.logsUnits
   }

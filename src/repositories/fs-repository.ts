@@ -1,5 +1,6 @@
 import { AppError } from "@/utils/AppError"
 import fs from "node:fs"
+import { env } from "@/config/env"
 
 class FsRepository {
 
@@ -59,12 +60,12 @@ class FsRepository {
 
   public async readLogFile (unit: string, logs: string) {
     try {
-      const result = this.existsFile(`./unidade/${unit}`)
+      const result = this.existsFile(`${env.PATCHFILE}/${unit}`)
       if (!result) {
         throw new AppError("Arquivo não encontrado.", 404)
       }
 
-      const units = await fs.promises.readFile(`./unidade/${unit}/Logs/${logs}`, "utf16le")
+      const units = await fs.promises.readFile(`${env.PATCHFILE}/${unit}/Logs/${logs}`, "utf16le")
       const textFile = units.split(/\r?\n/)
 
       return textFile
