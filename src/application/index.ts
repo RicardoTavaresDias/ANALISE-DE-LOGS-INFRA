@@ -7,11 +7,21 @@ import { taskCalled, readTaskCalled, removeFolderUnit } from "@/services/glpi-ta
 import standardizationUnits from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
 
+/**
+ * Fachada principal para operações no GLPI.
+ * Centraliza o fluxo de login, criação, busca e tratamento de chamados.
+ */
+
 export class GlpiFacade {
   private browser: GlpiBrowser
   private login: GlpiLogin
   private calleds: GlpiCalleds
   private createCalled: GlpiCreateCalled
+
+  /**
+   * Inicializa a fachada com credenciais e dependências.
+   * @param credentials Credenciais de acesso ao GLPI.
+   */
 
   constructor (credentials: Credentials) {
     this.browser = new GlpiBrowser(credentials)
@@ -20,7 +30,22 @@ export class GlpiFacade {
     this.createCalled = new GlpiCreateCalled(this.browser)
   }
 
-  async processCalleds() {
+  /**
+   * Processa os chamados de todas as unidades encontradas:
+   *  - Abre o navegador e autentica.
+   *  - Para cada unidade:
+   *    - Valida padronização da unidade.
+   *    - Seleciona a unidade na árvore.
+   *    - Cria e abre um novo chamado.
+   *    - Registra tarefas (logs) no chamado.
+   *    - Fecha ou mantém aberto dependendo dos erros.
+   *    - Remove a pasta temporária da unidade.
+   *  - Encerra o navegador ao final.
+   * 
+   * @throws {AppError} Se ocorrer falha no processamento de uma unidade.
+   */
+
+  public async processCalleds() {
     const foldersTmp = taskCalled()
 
     await this.browser.setBrowser()

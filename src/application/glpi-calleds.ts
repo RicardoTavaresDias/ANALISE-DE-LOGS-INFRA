@@ -1,10 +1,30 @@
 import { ElementHandle, Page } from 'puppeteer'
 import { GlpiBrowser } from "./glpi-browser"
 
+/**
+ * Responsável por gerenciar chamados já existentes no GLPI:
+ *  - Abrir chamado por ID
+ *  - Registrar tarefas
+ *  - Encerrar chamado
+ */
+
 export class GlpiCalleds {
+   /**
+   * Inicializa a classe de chamados com o navegador.
+   * @param browser Instância do navegador controlado via Puppeteer.
+   */
+
   constructor(private browser: GlpiBrowser) {}
 
-  async calledSearch (idCalled: string) {
+  /**
+   * Abre um chamado específico pelo ID.
+   * Navega até a tela do chamado e garante que a aba de tarefas esteja disponível.
+   * 
+   * @param idCalled ID do chamado no GLPI.
+   * @throws {Error} Se o chamado ou a aba de tarefas não carregar.
+   */
+
+  public async calledSearch (idCalled: string) {
     const page = this.browser.getPage()
 
     await page.goto(
@@ -26,7 +46,15 @@ export class GlpiCalleds {
     }, { timeout: 15000 })
   }
 
-  async taskCalled (textLogs: string) {
+  /**
+   * Insere uma tarefa no chamado.
+   * Escreve o log dentro do editor de texto (iframe) e confirma.
+   * 
+   * @param textLogs Texto dos logs a serem inseridos na tarefa.
+   * @throws {Error} Se a aba de tarefas ou o iframe não carregar.
+   */
+
+  public async taskCalled (textLogs: string) {
     const page = this.browser.getPage()
 
     await page.waitForSelector('li.task', { visible: true })
@@ -62,7 +90,15 @@ export class GlpiCalleds {
     }, { timeout: 15000 })
   }
 
-  async closeCalled () {
+  /**
+   * Fecha o chamado como concluído.
+   * Preenche modelo e tipo de solução, insere descrição no iframe
+   * e envia para aprovação.
+   * 
+   * @throws {Error} Se os campos obrigatórios não forem carregados.
+   */
+
+  public async closeCalled () {
     const page = this.browser.getPage()
 
     await page.waitForSelector('li.solution', { visible: true })
@@ -105,6 +141,13 @@ export class GlpiCalleds {
 
     await this.solutionApproval(page)
   }
+
+   /**
+   * Confirma a solução do chamado aprovando satisfação.
+   * 
+   * @param page Instância da página atual.
+   * @throws {Error} Se a tela de aprovação não carregar.
+   */
 
   private async solutionApproval (page: Page) {
     // Aprovar satisfação

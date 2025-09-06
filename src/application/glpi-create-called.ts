@@ -2,10 +2,29 @@ import { GlpiBrowser } from "./glpi-browser"
 import { ElementHandle, Page } from "puppeteer"
 import type { IStandardizationUnits } from "@/lib/standardization-units"
 
+/**
+ * Responsável pela criação de chamados no GLPI.
+ * Contém os passos necessários para selecionar unidade,
+ * preencher formulário e registrar novo chamado.
+ */
+
 export class GlpiCreateCalled {
+  /**
+ * Responsável pela criação de chamados no GLPI.
+ * Contém os passos necessários para selecionar unidade,
+ * preencher formulário e registrar novo chamado.
+ */
+
   constructor (private browser: GlpiBrowser) {}
 
-  async treeUnits (unitName: IStandardizationUnits["name"]) {
+  /**
+   * Seleciona a unidade (entidade) na árvore de unidades do GLPI.
+   * 
+   * @param unitName Nome da unidade padronizada.
+   * @throws {Error} Se a unidade não for encontrada na árvore.
+   */
+
+  public async treeUnits (unitName: IStandardizationUnits["name"]) {
     const page = this.browser.getPage()
 
     // Seleciona a arvore das unidades REGIAO SACA
@@ -27,7 +46,14 @@ export class GlpiCreateCalled {
     }, unitName)
   }
 
-  async newCalled (units: IStandardizationUnits) {
+   /**
+   * Cria um novo chamado no GLPI para a unidade informada.
+   * 
+   * @param units Objeto da unidade padronizada.
+   * @returns {Promise<string>} ID ou mensagem de sucesso do chamado criado.
+   */
+
+  public async newCalled (units: IStandardizationUnits) {
     const page = this.browser.getPage()
 
     await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000, waitUntil: 'networkidle0' })
@@ -51,7 +77,10 @@ export class GlpiCreateCalled {
     return message
   }
 
-  // Campo tipo
+  /**
+   * Preenche o campo "Tipo" do chamado.
+   */
+
   private async fillTypeField (page: Page) {
     // Aguardar o campo tipo
     await this.waitForFunction(page, '[id^="dropdown_type"]')
@@ -66,7 +95,10 @@ export class GlpiCreateCalled {
     await this.waitForFunction(page, '[id^="dropdown_type"]')
   }
 
-  // Campo Categoria
+  /**
+   * Seleciona a categoria do chamado.
+   */
+
   private async selectCategory (page: Page) {
     //Categoria - BACKUP > Acompanhamento Diario Rotina de Backup 
     await page.evaluate(() => {
@@ -82,7 +114,16 @@ export class GlpiCreateCalled {
     await this.waitForFunction(page, 'select[id^="dropdown_itilcategories"]')
   }
 
-  //Campos Requerente, Observador e Atribuído para
+  /**
+   * Define grupos relacionados ao chamado:
+   *  - Requerente
+   *  - Observador
+   *  - Atribuído para
+   * 
+   * @param page Página atual do navegador.
+   * @param units Unidade padronizada usada nos grupos.
+   */
+
   private async setGroups (page: Page, units: IStandardizationUnits) {
      await page.evaluate((value) => {
       //Requerente (user)
@@ -107,12 +148,18 @@ export class GlpiCreateCalled {
     }, units)
   }
 
-  // Campo Título
+   /**
+   * Preenche o campo título do chamado.
+   */
+
   private async fillTitle (page: Page) {
     await page.type("#mainformtable4 input", 'Verificar backup FTP Servidor')
   }
 
-  // Campo Descrição
+  /**
+   * Preenche o campo descrição do chamado (iframe).
+   */
+
   private async fillDescription (page: Page) {
      // Descrição => Espera o iframe aparecer e enviar texto no campo descrição
     await page.waitForSelector('iframe[id^="content"]');
@@ -128,6 +175,13 @@ export class GlpiCreateCalled {
     // Espera o iframe aparecer
     await page.waitForSelector('iframe[id^="content"]');
   }
+  
+   /**
+   * Aguarda até que um seletor esteja disponível na página.
+   * 
+   * @param page Instância da página Puppeteer.
+   * @param selector Seletor CSS para aguardar.
+   */
 
   private async waitForFunction (page: Page, selector: string) {
     return await page.waitForFunction((value) => {
