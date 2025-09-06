@@ -1,7 +1,6 @@
 import { GlpiBrowser } from "./glpi-browser"
 import { ElementHandle, Page } from "puppeteer"
 import type { IStandardizationUnits } from "@/lib/standardization-units"
-import { AppError } from "@/utils/AppError"
 
 export class GlpiCreateCalled {
   constructor (private browser: GlpiBrowser) {}

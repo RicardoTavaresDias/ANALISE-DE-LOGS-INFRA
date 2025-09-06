@@ -41,6 +41,6 @@ export class FsGlpiRepository {
       throw new AppError(`A pasta ${unit} não existe para ser excluido.`, 404)
     }
     
-    fs.promises.rmdir(`./tmp/${unit}`, { recursive: true })
+    fs.promises.rm(`./tmp/${unit}`, { recursive: true })
   }
 }
