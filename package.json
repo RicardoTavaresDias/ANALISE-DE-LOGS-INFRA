@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "tsx --watch --env-file .env src/server.ts",
     "build": "tsup src --out-dir build",
-    "start": "node build/server.js"
+    "start": "node build/server.js",
+    "pack": "pkg -t node18-win-x64 --assets './node_modules/**/*' --assets './build/**/*' ./build/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "cors": "^2.8.5",
     "dayjs": "^1.11.15",
     "express": "^5.1.0",
