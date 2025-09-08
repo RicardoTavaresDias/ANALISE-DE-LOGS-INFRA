@@ -1,42 +1,187 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Teste WebSocket</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação de Tarefas</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            gap: 30px;
+        }
+        .column {
+            flex: 1;
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #f9fafb;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #9ca3af;
+            display: block;
+        }
+        input[type="text"],
+        input[type="datetime-local"] {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            color: #e5e7eb;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 0.875rem;
+        }
+        input:focus {
+            border-color: #6366f1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        button {
+            background-color: #4c1d95;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #5b21b6;
+        }
+        .output {
+            background-color: #111827;
+            border: 1px solid #4b5563;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Menlo', monospace;
+            color: #d1d5db;
+        }
+        .output p {
+            margin: 5px 0;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-    <h1>Cliente WebSocket</h1>
-    <div id="log" style='font-family: "Lato", sans-serif'></div>
-
+    <div class="container">
+        <!-- Coluna de Controle de Tarefas -->
+        <div class="column">
+            <h2>Controle de Tarefas</h2>
+            <div class="form-group">
+                <label for="task-name">Nome da Tarefa</label>
+                <input type="text" id="task-name" placeholder="Ex.: Backup Diário">
+            </div>
+            <div class="form-group">
+                <label for="task-time">Horário de Execução</label>
+                <input type="datetime-local" id="task-time">
+            </div>
+            <button id="schedule-btn">Agendar Tarefa</button>
+            <div class="output" id="task-output">
+                <p>Aguardando atualizações...</p>
+            </div>
+        </div>
+        <!-- Coluna de Monitoramento -->
+        <div class="column">
+            <h2>Monitoramento</h2>
+            <button id="monitor-btn">Iniciar Monitoramento</button>
+            <div class="output" id="monitor-output">
+                <p>Aguardando dados...</p>
+            </div>
+        </div> 
+    </div>
     <script>
-        // Troque pelo IP/porta do seu servidor
-        const ws = new WebSocket('ws://localhost:3333')
+	
+        // Configurações fictícias (substitua por endpoints reais)
+        const API_BASE_URL = 'http://localhost:3333';
+        const WS_TASKS_URL = 'ws://localhost:3333';
+        const WS_MONITOR_URL = 'ws://api.example.com/ws-monitor';
 
-        ws.onopen = () => {
-            log('✅ Conectado ao servidor WebSocket');
-            ws.send('Olá servidor!');
-        };
-
-        ws.onmessage = (event) => {
-            log(event.data);
-        };
-
-        ws.onclose = () => {
-            log('❌ Conexão encerrada');
-        };
-
-        ws.onerror = (error) => {
-            log('⚠️ Erro: ' + error.message);
-        };
-
-        function log(message) {
-          const div = document.getElementById('log')
-          div.innerHTML += `<p style="white-space: pre; margin: 0; margin-left: 5px;" >${message}</p>`
+        function addMessage(outputId, message, isError = false) {
+            const output = document.getElementById(outputId);
+            if (!output) return;
+            const p = document.createElement('p');
+            p.innerHTML += `<p style="white-space: pre; margin: 0; margin-left: 5px;" >${message}</p>`
+            if (isError) p.classList.add('error');
+            output.appendChild(p);
+            output.scrollTop = output.scrollHeight;
         }
+
+        let taskWs, monitorWs;
+
+	        taskWs = new WebSocket(WS_TASKS_URL);
+            taskWs.onopen = () => addMessage('task-output', 'Conexão WebSocket estabelecida.');
+            taskWs.onmessage = (event) => addMessage('task-output', event.data);
+            taskWs.onclose = () => addMessage('task-output', 'Conexão fechada.');
+        
+
+        function connectMonitorWs() {
+            monitorWs = new WebSocket(WS_MONITOR_URL);
+            monitorWs.onopen = () => addMessage('monitor-output', 'Monitoramento iniciado.');
+            monitorWs.onmessage = (event) => addMessage('monitor-output', event.data);
+            monitorWs.onclose = () => addMessage('monitor-output', 'Monitoramento encerrado.');
+        }
+
+        document.getElementById('schedule-btn')?.addEventListener('click', async () => {
+			const output = document.getElementById("task-output");
+			output.innerHTML = ""
+			
+            const taskName = document.getElementById('task-name').value;
+            const taskTime = document.getElementById('task-time').value;
+            
+           
+            try {
+                const response = await fetch(`${API_BASE_URL}/logs`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+					  "dateStart": "2025-08-05",
+					  "dateEnd": "2025-08-09"
+					})
+                });
+                if (response.ok) addMessage('task-output', 'Tarefa agendada com sucesso.');
+                else addMessage('task-output', 'Erro ao agendar.', true);
+            } catch (error) {
+                addMessage('task-output', 'Erro de conexão.', true);
+            }
+        });
+
+        document.getElementById('monitor-btn')?.addEventListener('click', () => {
+            connectMonitorWs();
+        });
     </script>
 </body>
 </html>
