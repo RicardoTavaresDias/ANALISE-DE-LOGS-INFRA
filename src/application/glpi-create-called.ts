@@ -1,6 +1,7 @@
 import { GlpiBrowser } from "./glpi-browser"
 import { ElementHandle, Page } from "puppeteer"
 import type { IStandardizationUnits } from "@/lib/standardization-units"
+import { broadcastWss2 } from "@/utils/broadcast-ws"
 
 /**
  * Responsável pela criação de chamados no GLPI.
@@ -73,7 +74,7 @@ export class GlpiCreateCalled {
       return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
     })
 
-    console.log('Chamado criado ' + message)
+    broadcastWss2('Chamado criado ' + message)
     return message
   }
 

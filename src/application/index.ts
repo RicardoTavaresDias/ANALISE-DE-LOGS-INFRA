@@ -6,6 +6,7 @@ import { Credentials } from "./interface/ICredentials"
 import { taskCalled, readTaskCalled, removeFolderUnit } from "@/services/glpi-task-called.services"
 import standardizationUnits from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
+import { broadcastWss2 } from "@/utils/broadcast-ws"
 
 /**
  * Fachada principal para operações no GLPI.
@@ -81,15 +82,15 @@ export class GlpiFacade {
         }
 
         // Remover pasta temporária da unidade
-        console.log("removeFolderUnit", unit)
         removeFolderUnit(unit)
+        broadcastWss2('Chamado tramitado com sucesso' + unit)
       } catch (error: any) {
-        console.error(`❌ Erro ao processar unidade "${unit}":`, error.message || error)
+        broadcastWss2(`❌ Erro ao processar unidade "${unit}": ` + error.message || error)
         throw new AppError(`Falha no processamento da unidade ${unit}`, 500)
       }
     }
 
     await this.browser.browserClose()
-    console.log("🎉 Processamento de chamados concluído!")
+    broadcastWss2("🎉 Processamento de chamados concluído!")
   }
 }
