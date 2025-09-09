@@ -1,5 +1,5 @@
 import { TreeBuilder } from "@/utils/structuralTree"
-import { broadcast } from "@/utils/broadcast-ws"
+import { broadcastWss1 } from "@/utils/broadcast-ws"
 import { parseLogs, splitLogs } from "./log-analysis.services"
 import { AppError } from "@/utils/AppError"
 import { FsRepository } from "@/repositories/fs-repository"
@@ -75,7 +75,7 @@ class FileLogFacade {
       this.arrayDataSave = []
     }
 
-    // broadcast('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
+    // broadcastWss1('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
   }
 }
 

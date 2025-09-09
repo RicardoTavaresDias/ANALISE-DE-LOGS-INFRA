@@ -1,4 +1,4 @@
-import { broadcast } from "./broadcast-ws"
+import { broadcastWss1 } from "./broadcast-ws"
 
 type StructuralTreeType = {
   units: string
@@ -26,13 +26,13 @@ class TreeBuilder {
  */
 
 public structuralTree ({ units, totalUnits }: StructuralTreeType) {
-  this.isUnits && broadcast(`├── unidade`)
+  this.isUnits && broadcastWss1(`├── unidade`)
   this.isUnits = false
 
   if (units === totalUnits) {
-    broadcast(`|     └── <span style="color: #1da5c2">${units}</span>`)
+    broadcastWss1(`|     └── <span style="color: #1da5c2">${units}</span>`)
   } else {
-    broadcast(`|     ├── <span style="color: #1da5c2">${units}</span>`)
+    broadcastWss1(`|     ├── <span style="color: #1da5c2">${units}</span>`)
   }
 }
 
@@ -51,12 +51,12 @@ public logsUnitsPath ({ logsUnits, totalLogs, unitEnd }: LogsUnitsPathType): voi
   // Adiciona logs da unidade fechamento da arvore
   if (logsUnits === totalLogs) {
     unitEnd ?
-      broadcast(`|           └── <span style="color: #77767c">${logsUnits}</span>`) : 
-      broadcast(`|     |     └── <span style="color: #77767c">${logsUnits}</span>`)
+      broadcastWss1(`|           └── <span style="color: #77767c">${logsUnits}</span>`) : 
+      broadcastWss1(`|     |     └── <span style="color: #77767c">${logsUnits}</span>`)
   }else {
     unitEnd ?
-      broadcast(`|           ├── <span style="color: #77767c">${logsUnits}</span>`) : 
-      broadcast(`|     |     ├── <span style="color: #77767c">${logsUnits}</span>`)
+      broadcastWss1(`|           ├── <span style="color: #77767c">${logsUnits}</span>`) : 
+      broadcastWss1(`|     |     ├── <span style="color: #77767c">${logsUnits}</span>`)
   }
 
   unitEnd ? this.isUnits = true : this.isUnits
