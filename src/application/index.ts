@@ -53,10 +53,12 @@ export class GlpiFacade {
     await this.login.login()
    
     for (const unit of foldersTmp) {
+      broadcastWss2(`<p>Iniciado abertura de chamado ${unit}</p>`)
       const unitStandard = standardizationUnits[unit.toLowerCase()]
+
       if (!unitStandard) {
         this.browser.browserClose()
-        console.log(`❌ Unidade "${unit}" não encontrada no arquivo de padronização!`)
+        broadcastWss2(`<p>❌ Unidade "${unit}" não encontrada no arquivo de padronização!</p>`)
         return
       }
 
@@ -83,14 +85,14 @@ export class GlpiFacade {
 
         // Remover pasta temporária da unidade
         removeFolderUnit(unit)
-        broadcastWss2('Chamado tramitado com sucesso' + unit)
+        broadcastWss2('<p style="color: #22c55e">Chamado tramitado com sucesso <b>' + unit + "</b></p>")
       } catch (error: any) {
-        broadcastWss2(`❌ Erro ao processar unidade "${unit}": ` + error.message || error)
+        broadcastWss2(`<p>❌ Erro ao processar unidade "${unit}": ` + error.message || error + "<p>")
         throw new AppError(`Falha no processamento da unidade ${unit}`, 500)
       }
     }
 
     await this.browser.browserClose()
-    broadcastWss2("🎉 Processamento de chamados concluído!")
+    broadcastWss2("<p>🎉 Processamento de chamados concluído!</p>")
   }
 }

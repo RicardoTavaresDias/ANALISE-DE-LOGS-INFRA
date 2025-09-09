@@ -74,7 +74,7 @@ export class GlpiCreateCalled {
       return document.querySelector<HTMLSelectElement>('[id^="message_after_redirect"] a')!.innerText
     })
 
-    broadcastWss2('Chamado criado ' + message)
+    broadcastWss2('<p style="color: #f59e0b">Chamado criado ' + message + "</p>")
     return message
   }
 
