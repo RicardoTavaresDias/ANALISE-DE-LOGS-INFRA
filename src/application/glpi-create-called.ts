@@ -37,14 +37,20 @@ export class GlpiCreateCalled {
     
     await page.waitForSelector(".jstree-closed", { timeout: 10000 })
     await page.click(".jstree-icon")
+    // aguarda expandido
+    await page.waitForSelector(".jstree-open", { timeout: 10000 }) 
 
+     // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
+    await page.waitForSelector(".jstree-anchor", { timeout: 10000 })
     await page.waitForFunction((unitValue) => {
       return [...document.querySelectorAll(".jstree-anchor")]
       .some(el => el.textContent?.includes(unitValue));
     }, { timeout: 10000 }, unitName)
 
     await page.evaluate((unitValue) => {
-      const node = [...document.querySelectorAll<HTMLSelectElement>(".jstree-children .jstree-anchor")].find(value => value.textContent.includes(unitValue))
+      const node = [...document.querySelectorAll<HTMLSelectElement>(".jstree-anchor")].find(value => value.textContent.includes(unitValue))
       node?.click()
     }, unitName)
   }
@@ -70,10 +76,7 @@ export class GlpiCreateCalled {
     await this.fillTitle(page)
     await this.fillDescription(page)
 
-    // Aguarda texto renderizado e rede estabilizar
-    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
-
-    await page.waitForSelector('.submit', { visible: true })
+    await page.waitForSelector('.submit', { visible: true, timeout: 15000 })
     await page.click('.submit')
 
     // Aguarda texto renderizado e rede estabilizar
@@ -95,17 +98,36 @@ export class GlpiCreateCalled {
    */
 
   private async fillTypeField (page: Page) {
-    // Aguardar o campo tipo
-    await this.waitForFunction(page, '[id^="dropdown_type"]')
+     // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 20000 })
+    
+    // Aguarda o seletor dropdown_type, permitindo mais tempo e verificando a existência
+    await page.waitForSelector('[id^="dropdown_type"]', { visible: true, timeout: 20000 }).catch(() => {
+      console.log('Seletor [id^="dropdown_type"] não encontrado em 20 segundos.');
+    })
+
+    // Esperar que o select2 do Ajax finalize antes de manipular o <select>:
+    await page.waitForFunction(() => {
+      //@ts-ignore
+      return !!document.querySelector('[id^="dropdown_type"]').nextSibling?.classList.contains('select2-container')
+    }, { timeout: 25000 }).catch((err) => {
+      console.log(`Seletor [id^="dropdown_type"] waitForFunction => ${err.mensagem}`)
+    })
+
 
     // Tipo - Requisição
     await page.evaluate(() => {
       document.querySelector<HTMLSelectElement>('[id^="dropdown_type"]')!.value = "2"
       document.querySelector<any>('[id^="dropdown_type"]').onchange()
+    }).catch((err) => {
+      console.log(`Seletor [id^="dropdown_type"] evaluate [.value = "2" e .onchange()] => ${err.mensagem}`)
     })
 
     // Aguardar o campo tipo
     await this.waitForFunction(page, '[id^="dropdown_type"]')
+    .catch((err) => {
+      console.log(`waitForFunction final => ${err.mensagem}`)
+    })
   }
 
   /**
@@ -184,12 +206,12 @@ export class GlpiCreateCalled {
         p.textContent = 'Validar a conexão do FTP e evidenciar.'
       }
     })
-
+    
     // Aguarda texto renderizado e rede estabilizar
     await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
-
+    
     // Espera o iframe aparecer
-    await page.waitForSelector('iframe[id^="content"]');
+    await page.waitForSelector('iframe[id^="content"]')
   }
   
    /**

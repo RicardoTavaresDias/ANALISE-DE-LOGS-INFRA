@@ -27,6 +27,8 @@ export class GlpiCalleds {
   public async calledSearch (idCalled: string) {
     const page = this.browser.getPage()
 
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
     await page.goto(
       `https://glpi.ints.org.br/front/ticket.form.php?id=${idCalled}`, 
       { timeout: 35000 }
@@ -85,7 +87,8 @@ export class GlpiCalleds {
     await page.waitForSelector('.x-button', { visible: true, timeout: 10000 })
     await page.click('.x-button')
 
-    //await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+    // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
   }
 
   /**
