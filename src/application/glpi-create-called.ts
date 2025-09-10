@@ -46,7 +46,7 @@ export class GlpiCreateCalled {
     await page.waitForSelector(".jstree-anchor", { timeout: 10000 })
     await page.waitForFunction((unitValue) => {
       return [...document.querySelectorAll(".jstree-anchor")]
-      .some(el => el.textContent?.includes(unitValue));
+      .some(el => el.textContent?.includes(unitValue))
     }, { timeout: 10000 }, unitName)
 
     await page.evaluate((unitValue) => {
@@ -103,7 +103,7 @@ export class GlpiCreateCalled {
     
     // Aguarda o seletor dropdown_type, permitindo mais tempo e verificando a existência
     await page.waitForSelector('[id^="dropdown_type"]', { visible: true, timeout: 20000 }).catch(() => {
-      console.log('Seletor [id^="dropdown_type"] não encontrado em 20 segundos.');
+      console.log('Seletor [id^="dropdown_type"] não encontrado em 20 segundos.')
     })
 
     // Esperar que o select2 do Ajax finalize antes de manipular o <select>:
@@ -197,7 +197,7 @@ export class GlpiCreateCalled {
 
   private async fillDescription (page: Page) {
      // Descrição => Espera o iframe aparecer e enviar texto no campo descrição
-    await page.waitForSelector('iframe[id^="content"]');
+    await page.waitForSelector('iframe[id^="content"]')
     const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
     const frame = await iframeElement?.contentFrame()
     await frame?.evaluate(() => {

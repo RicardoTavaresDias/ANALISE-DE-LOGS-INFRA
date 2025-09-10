@@ -135,7 +135,7 @@ export class GlpiCalleds {
     }, credentialsUser)
 
     // Espera o iframe aparecer
-    await page.waitForSelector('iframe[id^="content"]');
+    await page.waitForSelector('iframe[id^="content"]')
 
     // Adicionar botão
     await page.click('.submit')
