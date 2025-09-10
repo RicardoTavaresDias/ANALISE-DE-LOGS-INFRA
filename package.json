@@ -7,7 +7,7 @@
     "dev": "tsx --watch --env-file .env src/server.ts",
     "build": "tsup src --out-dir build",
     "start": "node build/server.js",
-    "pack": "pkg -t node18-win-x64 --assets './node_modules/**/*' --assets './build/**/*' ./build/server.js"
+    "pack": "pkg -t node18-win-x64 --assets './node_modules/**/*' --assets './build/**/*' --public ./build/server.js"
   },
   "keywords": [],
   "author": "",

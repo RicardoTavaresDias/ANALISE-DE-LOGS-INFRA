@@ -8,7 +8,9 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   URL: z.string().url(),
-  HEADLESS: z.string().transform(value => value.toLowerCase() === 'true').default('false'),
+  OFFBROWSER: z.string().transform(value => {
+    return value.toLowerCase() === 'false' ? '--window-position=2000,2000' : ''
+  }),
   PATCHFILE: z.string().default('./unidade')
 })
 

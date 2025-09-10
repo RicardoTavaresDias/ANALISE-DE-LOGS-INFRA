@@ -89,6 +89,7 @@ export class GlpiFacade {
         broadcastWss2(`<p>---------------------------------------</p>`)
       } catch (error: any) {
         broadcastWss2(`<p>❌ Erro ao processar unidade "${unit}": ` + error.message || error + "<p>")
+        await this.browser.browserClose()
         throw new AppError(`Falha no processamento da unidade ${unit}`, 500)
       }
     }

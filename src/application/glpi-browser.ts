@@ -30,11 +30,11 @@ export class GlpiBrowser {
 
   public async setBrowser(){
     this.browser = await puppeteer.launch({ 
-      headless: env.HEADLESS, 
+      headless: false, 
       args: [
         '--window-size=1024,700',
         '--start-maximized', // Maximiza a janela (opcional)
-        '--window-position=2000,2000' // Move a janela para fora da tela visível
+        env.OFFBROWSER // Move a janela para fora da tela visível
       ],
       defaultViewport: null 
     })
