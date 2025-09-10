@@ -86,6 +86,7 @@ export class GlpiFacade {
         // Remover pasta temporária da unidade
         removeFolderUnit(unit)
         broadcastWss2('<p style="color: #22c55e">Chamado tramitado com sucesso <b>' + unit + "</b></p>")
+        broadcastWss2(`<p>--------------------------------------------------------------------------</p>`)
       } catch (error: any) {
         broadcastWss2(`<p>❌ Erro ao processar unidade "${unit}": ` + error.message || error + "<p>")
         throw new AppError(`Falha no processamento da unidade ${unit}`, 500)

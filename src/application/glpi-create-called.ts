@@ -28,6 +28,9 @@ export class GlpiCreateCalled {
   public async treeUnits (unitName: IStandardizationUnits["name"]) {
     const page = this.browser.getPage()
 
+    // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
     // Seleciona a arvore das unidades REGIAO SACA
     await page.evaluate(() => {
       document.querySelector<HTMLSelectElement>("#global_entity_select")!.click()
@@ -59,13 +62,23 @@ export class GlpiCreateCalled {
 
     await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000, waitUntil: 'networkidle0' })
 
+    // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
     await this.fillTypeField(page)
     await this.selectCategory(page)
     await this.setGroups(page, units)
     await this.fillTitle(page)
     await this.fillDescription(page)
 
+    // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
+    await page.waitForSelector('.submit', { visible: true })
     await page.click('.submit')
+
+    // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
 
     // Aguardar menssagem de sucesso
     await this.waitForFunction(page, '[id^="message_after_redirect"]')
@@ -173,6 +186,9 @@ export class GlpiCreateCalled {
       }
     })
 
+    // Aguarda texto renderizado e rede estabilizar
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
     // Espera o iframe aparecer
     await page.waitForSelector('iframe[id^="content"]');
   }
@@ -185,8 +201,6 @@ export class GlpiCreateCalled {
    */
 
   private async waitForFunction (page: Page, selector: string) {
-    return await page.waitForFunction((value) => {
-      return document.querySelector(value)
-    }, { timeout: 10000 }, selector)
+    return await page.waitForSelector(selector, { visible: true, timeout: 10000 })
   }
 }

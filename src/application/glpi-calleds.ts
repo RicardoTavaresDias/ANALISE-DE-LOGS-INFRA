@@ -61,13 +61,15 @@ export class GlpiCalleds {
     await page.click('li.task') 
     
     // Espera o iframe aparecer
-    await page.waitForSelector('iframe[id^="content"]');
+    await page.waitForSelector('iframe[id^="content"]', { visible: true })
 
     // Pega o iframe elementHandle
-    const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
+    const iframeElement = await page.$('iframe[id^="content"]')
 
     // Acessa o conteúdo do iframe como um frame separado
     const frame = await iframeElement?.contentFrame()
+
+    await frame?.waitForSelector('p', { visible: true })
 
     // Digita no <p> dentro do iframe
     await frame?.evaluate((value) => {
@@ -77,17 +79,13 @@ export class GlpiCalleds {
       }
     }, textLogs)
 
+    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+
     // aguardar que o botão X esteja pronto
-    await page.waitForFunction(() => {
-      return !!document.querySelector('.x-button')
-    }, { timeout: 10000 })
- 
+    await page.waitForSelector('.x-button', { visible: true, timeout: 10000 })
     await page.click('.x-button')
 
-    // Esperar que a aba solution esteja disponível antes de chamar closeCalled
-    await page.waitForFunction(() => {
-      return !!document.querySelector('li.solution')
-    }, { timeout: 15000 })
+    //await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
   }
 
   /**
