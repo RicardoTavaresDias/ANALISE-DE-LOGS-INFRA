@@ -65,15 +65,8 @@ export class GlpiCalleds {
     // Espera o iframe aparecer
     await page.waitForSelector('iframe[id^="content"]', { visible: true })
 
-    // Pega o iframe elementHandle
-    const iframeElement = await page.$('iframe[id^="content"]')
-
-    // Acessa o conteúdo do iframe como um frame separado
-    const frame = await iframeElement?.contentFrame()
-
-    await frame?.waitForSelector('p', { visible: true })
-
     // Digita no <p> dentro do iframe
+    const frame = await (await page.waitForSelector('iframe[id^="content"]', { visible: true }))?.contentFrame()    
     await frame?.evaluate((value) => {
       const p = document.querySelector('p')
       if (p) {
@@ -125,8 +118,7 @@ export class GlpiCalleds {
 
     // Descrição no iframe
     await page.waitForSelector('iframe[id^="content"]');
-    const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
-    const frame = await iframeElement?.contentFrame()
+    const frame = await (await page.waitForSelector('iframe[id^="content"]', { visible: true }))?.contentFrame() 
     await frame?.evaluate((value) => {
       const p = document.querySelector('p')
       if (p) {

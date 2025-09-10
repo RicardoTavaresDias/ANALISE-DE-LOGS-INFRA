@@ -198,8 +198,7 @@ export class GlpiCreateCalled {
   private async fillDescription (page: Page) {
      // Descrição => Espera o iframe aparecer e enviar texto no campo descrição
     await page.waitForSelector('iframe[id^="content"]')
-    const iframeElement: ElementHandle<any> | null = await page.$('iframe[id^="content"]')
-    const frame = await iframeElement?.contentFrame()
+    const frame = await (await page.waitForSelector('iframe[id^="content"]', { visible: true }))?.contentFrame() 
     await frame?.evaluate(() => {
       const p = document.querySelector('p')
       if (p) {
