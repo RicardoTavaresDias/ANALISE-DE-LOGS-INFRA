@@ -32,10 +32,9 @@ export class GlpiCreateCalled {
     await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
 
     // Seleciona a arvore das unidades REGIAO SACA
-    await page.evaluate(() => {
-      document.querySelector<HTMLSelectElement>("#global_entity_select")!.click()
-    })
-
+    await page.waitForSelector("#global_entity_select", { timeout: 10000 })
+    await page.click("#global_entity_select")
+    
     await page.waitForSelector(".jstree-closed", { timeout: 10000 })
     await page.click(".jstree-icon")
 
