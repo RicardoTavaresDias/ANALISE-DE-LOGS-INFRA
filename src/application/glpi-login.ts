@@ -30,7 +30,7 @@ export class GlpiLogin {
     await page.goto(env.URLGLPI, { timeout: 35000 })
     await page.type("#login_name", this.browser.credentials.user)
     await page.type("#login_password", this.browser.credentials.password)
-    //await page.type("#dropdown_auth1", "DC-SACA")
+    await page.type("#dropdown_auth1", "DC-SACA")
     await page.click(`[type="submit"]`)
 
     await page.waitForSelector("#c_logo", { timeout: 10000 })
