@@ -14,7 +14,6 @@ export function parseLogs (textFile: string[]): string[] {
 
   let isBlocked: boolean = false
   let hasError: boolean = false
-  
 
   const formatLine = (line: string) => `\n${line}<br>`
 

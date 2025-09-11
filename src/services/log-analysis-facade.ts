@@ -1,5 +1,4 @@
 import { TreeBuilder } from "@/utils/structuralTree"
-import { broadcastWss1 } from "@/utils/broadcast-ws"
 import { parseLogs, splitLogs } from "./log-analysis.services"
 import { AppError } from "@/utils/AppError"
 import { FsRepository } from "@/repositories/fs-repository"
