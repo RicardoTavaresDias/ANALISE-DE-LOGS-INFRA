@@ -55,11 +55,14 @@ export function parseLogs (textFile: string[]): string[] {
       hasError = false
 
     } else if (hasError) {
-      arrayLogsError.push(formatLine(line))
+      arrayLogsError.push(formatLine(line)) 
     }
   }
-
-  return arrayLogsError
+  const result = [...arrayLogsError]
+  arrayLogsError.length = 0
+  arrayLogs.length = 0
+  errorLarge.length = 0
+  return result
 }
 
 /**

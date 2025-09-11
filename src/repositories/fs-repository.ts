@@ -85,6 +85,10 @@ class FsRepository {
    */
 
   public async saveFile (path: string, content: string, units: string) {
+    if (content.length === 0) {
+      return
+    }
+
     this.mkdirFile('./tmp')
     this.mkdirFile(`./tmp/${units}`)
 

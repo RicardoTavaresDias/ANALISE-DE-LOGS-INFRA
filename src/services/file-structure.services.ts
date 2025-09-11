@@ -28,7 +28,9 @@ class FileStructure {
   private mapUnitsToLogs (units: string[]) {
     for(const unitPath of units) {
       const resultUnits = this.checksFolders(unitPath)
-      this.logsUnits.push({ units: unitPath, logs: resultUnits })
+      if(resultUnits !== null) {
+        this.logsUnits.push({ units: unitPath, logs: resultUnits })
+      }
     }
   }
 
@@ -41,9 +43,13 @@ class FileStructure {
    * @throws {AppError} Se não for possível ler os logs da unidade
    */
 
-  private checksFolders (path: string): string[] {
-    const result = this.fsRepository.showFilesFolder(`${env.PATCHFILE}/${path}/Logs`)
-    return this.dateLogs(result)
+  private checksFolders (path: string) {
+    try {
+      const result = this.fsRepository.showFilesFolder(`${env.PATCHFILE}/${path}/Logs`)
+      return this.dateLogs(result)
+    } catch {
+      return null
+    }
   }
 
    /**
@@ -80,7 +86,8 @@ class FileStructure {
     this.dateEnd = bodyDateEnd
 
     const units = this.fsRepository.showFilesFolder(env.PATCHFILE)
-    this.mapUnitsToLogs(units)
+    const removingHiddenFolders = units.filter(value => !value.includes("."))
+    this.mapUnitsToLogs(removingHiddenFolders)
     return this.logsUnits
   }
 }
