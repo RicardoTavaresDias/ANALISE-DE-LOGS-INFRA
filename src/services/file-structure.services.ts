@@ -46,7 +46,9 @@ class FileStructure {
   private checksFolders (path: string) {
     try {
       const result = this.fsRepository.showFilesFolder(`${env.PATCHFILE}/${path}/Logs`)
-      return this.dateLogs(result)
+      const onlyTextFiles = result.filter(value => value.includes(".txt"))
+      
+      return this.dateLogs(onlyTextFiles)
     } catch {
       return null
     }
