@@ -26,5 +26,8 @@
   "aeroporto": {"name": "UBS Jardim Aeroporto - Dr. Massaki Udihara", "id": "157"},
   "arriete": {"name": "UBS Vila Arriete - Dr. Decio Pcheco Pedroso", "id": "161"},
   "upadoroteia": {"name": "UPA 24hs Pq. Doroteia", "id": "128"},
-  "upapedreira": {"name": "UPA Pedreira - Dr. Cesar Antunes da Rocha", "id": "176"}
+  "upapedreira": {"name": "UPA Pedreira - Dr. Cesar Antunes da Rocha", "id": "176"},
+  "hdca": {"name": "Hospital Dia Cidade Ademar", "id": "144"},
+  "sad": {"name": "Serviço de Assistência Domiciliar - Cidade Ademar", "id": "147"},
+  "upastoamaro": {"name": "UPA Santo Amaro - Dr. Jose Sylvio de Camargo", "id": "177"}
 }
