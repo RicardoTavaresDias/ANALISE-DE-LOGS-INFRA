@@ -1,5 +1,6 @@
 import { AppError } from "@/utils/AppError"
 import { GlpiBrowser } from "./glpi-browser"
+import { env } from "@/config/env"
 
 /**
  * Responsável pelo processo de autenticação no GLPI.
@@ -26,10 +27,10 @@ export class GlpiLogin {
   public async login(){
     const page = this.browser.getPage()
 
-    await page.goto("https://glpi.ints.org.br/", { timeout: 35000 })
+    await page.goto(env.URLGLPI, { timeout: 35000 })
     await page.type("#login_name", this.browser.credentials.user)
     await page.type("#login_password", this.browser.credentials.password)
-    await page.type("#dropdown_auth1", "DC-SACA")
+    //await page.type("#dropdown_auth1", "DC-SACA")
     await page.click(`[type="submit"]`)
 
     await page.waitForSelector("#c_logo", { timeout: 10000 })

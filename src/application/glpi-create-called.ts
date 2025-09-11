@@ -1,7 +1,8 @@
 import { GlpiBrowser } from "./glpi-browser"
-import { ElementHandle, Page } from "puppeteer"
+import { Page } from "puppeteer"
 import type { IStandardizationUnits } from "@/lib/standardization-units"
 import { broadcastWss2 } from "@/utils/broadcast-ws"
+import { env } from "@/config/env"
 
 /**
  * Responsável pela criação de chamados no GLPI.
@@ -65,7 +66,7 @@ export class GlpiCreateCalled {
   public async newCalled (units: IStandardizationUnits) {
     const page = this.browser.getPage()
 
-    await page.goto("https://glpi.ints.org.br/front/ticket.form.php", { timeout: 35000, waitUntil: 'networkidle0' })
+    await page.goto(`${env.URLGLPI}/front/ticket.form.php`, { timeout: 35000, waitUntil: 'networkidle0' })
 
     // Aguarda texto renderizado e rede estabilizar
     await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })

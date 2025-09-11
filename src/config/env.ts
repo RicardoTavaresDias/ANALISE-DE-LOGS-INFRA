@@ -11,7 +11,8 @@ const envSchema = z.object({
   OFFBROWSER: z.string().transform(value => {
     return value.toLowerCase() === 'false' ? '--window-position=2000,2000' : ''
   }),
-  PATCHFILE: z.string().default('./unidade')
+  PATCHFILE: z.string().default('./unidade'),
+  URLGLPI: z.string().url()
 })
 
 const env = envSchema.parse(process.env)

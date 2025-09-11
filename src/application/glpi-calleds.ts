@@ -1,5 +1,6 @@
-import { ElementHandle, Page } from 'puppeteer'
+import { Page } from 'puppeteer'
 import { GlpiBrowser } from "./glpi-browser"
+import { env } from "@/config/env"
 
 /**
  * Responsável por gerenciar chamados já existentes no GLPI:
@@ -30,7 +31,7 @@ export class GlpiCalleds {
     await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
 
     await page.goto(
-      `https://glpi.ints.org.br/front/ticket.form.php?id=${idCalled}`, 
+      `${env.URLGLPI}/front/ticket.form.php?id=${idCalled}`, 
       { timeout: 35000 }
     )
 

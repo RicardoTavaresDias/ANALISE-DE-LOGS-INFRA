@@ -30,9 +30,19 @@ export class FsGlpiRepository {
       throw new AppError("Arquivo não encontrado.", 404)
     }
 
+    if (!this.existsFileTmp(`./tmp/${unit}/${unit}_success.txt`)) {
+      const contentError = await fs.promises.readFile(`./tmp/${unit}/${unit}_error.txt`, "utf-8") 
+      return { contentError }
+    }
+
+    if (!this.existsFileTmp(`./tmp/${unit}/${unit}_error.txt`)) {
+      const contentSucess = await fs.promises.readFile(`./tmp/${unit}/${unit}_success.txt`, "utf-8")
+      return { contentSucess }
+    }
+
     const contentSucess = await fs.promises.readFile(`./tmp/${unit}/${unit}_success.txt`, "utf-8")
     const contentError = await fs.promises.readFile(`./tmp/${unit}/${unit}_error.txt`, "utf-8") 
-
+    
     return { contentSucess, contentError }
   }
 
