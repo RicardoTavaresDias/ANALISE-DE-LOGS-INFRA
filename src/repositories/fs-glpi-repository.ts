@@ -1,12 +1,32 @@
 import { AppError } from "@/utils/AppError"
 import fs from "node:fs"
 
+/**
+ * Repositório responsável por operações de leitura e remoção
+ * de arquivos temporários do GLPI.
+ */
+
 export class FsGlpiRepository {
+
+   /**
+   * Verifica se o arquivo ou pasta existe no caminho informado.
+   * @param {string} path - Caminho do arquivo/pasta.
+   * @returns {boolean} Verdadeiro se existir.
+   * @private
+   */
+
   private existsFileTmp (path: string) {
     const fileExist = fs.existsSync(path)
 
     return fileExist
   }
+
+  /**
+   * Lista os arquivos de uma pasta temporária.
+   * @param {string} path - Caminho da pasta a ser verificada.
+   * @throws {AppError} Se a pasta não existir ou estiver vazia.
+   * @returns {string[]} Lista de arquivos encontrados.
+   */
 
   showFolderTmp (path: string) {
     const exist = this.existsFileTmp(path)
@@ -23,6 +43,13 @@ export class FsGlpiRepository {
       throw new AppError(error.message, 500)
     }
   }
+
+   /**
+   * Lê os arquivos de sucesso e erro de uma unidade.
+   * @param {string} unit - Nome da unidade (ex.: "setor01").
+   * @throws {AppError} Se não encontrar a pasta temporária.
+   * @returns {Promise<{contentSucess?: string, contentError?: string}>} Conteúdo dos arquivos.
+   */
 
   async read (unit: string) {
     const existTmp = this.existsFileTmp(`./tmp`)
@@ -45,6 +72,13 @@ export class FsGlpiRepository {
     
     return { contentSucess, contentError }
   }
+
+  /**
+   * Remove a pasta de uma unidade.
+   * @param {string} unit - Nome da unidade/pasta.
+   * @throws {AppError} Se a pasta não existir.
+   * @returns {Promise<void>}
+   */
 
   removeFolder (unit: string) {
     if (!this.existsFileTmp(`./tmp/${unit}`)) {
