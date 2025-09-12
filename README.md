@@ -62,10 +62,16 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
 4. **Configuração**:
    - Crie um arquivo `.env` com bases como:
     ```env
+    # porta do servidor
     PORT=3333
+
+    # caminho do servidor para documentação
     URL=http://localhost:3333
-    navegador do Puppeteer true fica a mostra ou false fica minimizado o navegador
+
+    # navegador do Puppeteer true fica a mostra ou false fica minimizado o navegador
     OFFBROWSER=true
+    
+    # Caminho da pasta de logs aonde será lido
     PATCHFILE=.\unidade
     ```
    - Nota: Credenciais GLPI são inseridas runtime para maior segurança; não armazene no .env.
@@ -79,6 +85,26 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
     ```
     npm run build  # Gera executável
     ```
+6. **Gerar executavel**:
+
+    permite que você empacote seu projeto Node.js em um executável 
+
+    ````
+    npm install -g pkg
+    ````
+
+    Criar pasta build para produção
+
+    ````
+    npm run build
+    ````
+
+    Executa empacotamento, verifica o antivirus antes pois pode bloquear o processo.
+
+    ````
+    npm run pack
+    ````
+
 
 ## Uso
 
@@ -95,6 +121,16 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
 
     Para depuração, verifique logs em `./tmp` ou consulte o código em `src/`.
 
+# Docs
+
+Após iniciar o servidor (porta padrão: 3000), acesse a documentação Swagger em:
+
+````
+http://localhost:3333/docs
+````
+
+- Explorar os endpoints da API.
+- Testar requisições diretamente pela Swagger UI.
 
 ## Contato
 
