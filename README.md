@@ -61,7 +61,7 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
 
 4. **Configuração**:
 
-   - Crie um arquivo `.env` com bases como:<br>
+   Crie um arquivo `.env` com bases como:
 
     ```env
     # porta do servidor
@@ -81,13 +81,13 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
 
 5. **Executando a Aplicação**:
 
-   - Para desenvolvimento:<br>
+   Para desenvolvimento:
 
     ```
     npm run dev 
     ```
 
-   - Para produção:<br>
+   Para produção:
 
     ```
     npm run build  # Gera executável
