@@ -61,7 +61,7 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
 
 4. **Configuração**:
 
-   - Crie um arquivo `.env` com bases como:
+   - Crie um arquivo `.env` com bases como:<br>
 
     ```env
     # porta do servidor
@@ -76,18 +76,18 @@ Em resumo, o projeto empodera profissionais de TI a transcenderem o operacional 
     # Caminho da pasta de logs aonde será lido
     PATCHFILE=.\unidade
     ```
-    
+
    - Nota: Credenciais GLPI são inseridas runtime para maior segurança; não armazene no .env.
 
 5. **Executando a Aplicação**:
 
-   - Para desenvolvimento:
+   - Para desenvolvimento:<br>
 
     ```
     npm run dev 
     ```
 
-   - Para produção:
+   - Para produção:<br>
 
     ```
     npm run build  # Gera executável
