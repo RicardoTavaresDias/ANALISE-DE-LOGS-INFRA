@@ -30,7 +30,7 @@ export class GlpiCreateCalled {
     const page = this.browser.getPage()
 
     // Aguarda texto renderizado e rede estabilizar
-    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+    //await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
 
     // Seleciona a arvore das unidades REGIAO SACA
     await page.waitForSelector("#global_entity_select", { timeout: 10000 })

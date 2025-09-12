@@ -56,13 +56,13 @@ export class GlpiFacade {
     await this.login.login()
 
     // Valida se o chamado já existe na data especifica antes de abrir novo chamado e tramitar.
-    const calledsExists = await this.validationCalled.ExistsCalledSpecificDate('2025-09-09')
+    const calledsExists = await this.validationCalled.existsCalledSpecificDate('2025-09-09')
 
     if (calledsExists) {
       await this.browser.browserClose()
       return broadcastWss2(`
-        <p>chamados ja existe nessa data:</p>
-        <p style="color: #0891b2">${calledsExists.join(", ")}</p>
+        <p>Chamados já existe nessa data:</p>
+        <p style="color: #f8fafc">${calledsExists.join("")}</p>
       `.trim())
     }
    

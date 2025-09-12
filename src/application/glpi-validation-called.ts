@@ -21,7 +21,7 @@ export class GlpiValidationCalled {
    * @throws {Error} Se ocorrer falha na navegação ou execução da página.
    */
 
-  public async ExistsCalledSpecificDate (date: string) {
+  public async existsCalledSpecificDate (date: string) {
     const page = this.browser.getPage()
 
     await page.goto(
@@ -29,23 +29,27 @@ export class GlpiValidationCalled {
       { timeout: 35000 }
     )
 
-    // Aguarda texto renderizado e rede estabilizar
-    await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
+    // Tenta localizar tabela
+    const hasTable = await page.$("table.tab_cadrehov > tbody > tr > td")
+    if (!hasTable) {
+      return false
+    } 
+
+    await page.waitForSelector("table.tab_cadrehov > tbody > tr > td", { visible: true })
 
     // Procura na data especifica se já existe chamado
     const result = await page.evaluate(() => {
       return [...document.querySelectorAll("table.tab_cadrehov > tbody > tr > td")]
         .map(value => {
           if (value.textContent.match(/\d{3}\s\d{3}/g)) 
-            return value.textContent
+            return value.textContent.replace(/\s+/g, "") + '<br>' // remove espaço
+          
+          if (value.textContent.includes('INTS > REGIAO SACA >')) 
+            return value.textContent.replace("INTS > REGIAO SACA > ", "") + "<br><br>"
       })
     })
 
-    if (result.length) {
-      const idCalledExists = result.filter(value => value !== null)
-      return idCalledExists
-    } 
-
-    return false
+    const idCalledExists = result.filter(value => value !== null)
+    return idCalledExists
   }
 }
