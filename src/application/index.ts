@@ -7,6 +7,7 @@ import { taskCalled, readTaskCalled, removeFolderUnit } from "@/services/glpi-ta
 import standardizationUnits from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
 import { broadcastWss2 } from "@/utils/broadcast-ws"
+import { GlpiValidationCalled } from "./glpi-validation-called"
 
 /**
  * Fachada principal para operações no GLPI.
@@ -18,6 +19,7 @@ export class GlpiFacade {
   private login: GlpiLogin
   private calleds: GlpiCalleds
   private createCalled: GlpiCreateCalled
+  private validationCalled: GlpiValidationCalled
 
   /**
    * Inicializa a fachada com credenciais e dependências.
@@ -29,6 +31,7 @@ export class GlpiFacade {
     this.login = new GlpiLogin(this.browser)
     this.calleds = new GlpiCalleds(this.browser)
     this.createCalled = new GlpiCreateCalled(this.browser)
+    this.validationCalled = new GlpiValidationCalled(this.browser)
   }
 
   /**
@@ -51,6 +54,17 @@ export class GlpiFacade {
 
     await this.browser.setBrowser()
     await this.login.login()
+
+    // Valida se o chamado já existe na data especifica antes de abrir novo chamado e tramitar.
+    const calledsExists = await this.validationCalled.ExistsCalledSpecificDate('2025-09-09')
+
+    if (calledsExists) {
+      await this.browser.browserClose()
+      return broadcastWss2(`
+        <p>chamados ja existe nessa data:</p>
+        <p style="color: #0891b2">${calledsExists.join(", ")}</p>
+      `.trim())
+    }
    
     for (const unit of foldersTmp) {
       broadcastWss2(`<p>Iniciado abertura de chamado ${unit}</p>`)
