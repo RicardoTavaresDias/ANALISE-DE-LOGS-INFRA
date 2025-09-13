@@ -33,7 +33,7 @@ export class GlpiLogin {
     await page.type("#dropdown_auth1", "DC-SACA")
     await page.click(`[type="submit"]`)
 
-    await page.waitForSelector("#c_logo", { timeout: 10000 })
+    await page.waitForSelector("#c_logo", { timeout: 800 })
     .catch(async () => {
       const error = await page.evaluate(() => {
         return document.querySelector('[class="center b"]')?.textContent
