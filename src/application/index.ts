@@ -3,7 +3,7 @@ import { GlpiCalleds } from "./glpi-calleds"
 import { GlpiLogin } from "./glpi-login"
 import { GlpiCreateCalled } from "./glpi-create-called"
 import { Credentials } from "./interface/ICredentials"
-import { taskCalled, readTaskCalled, removeFolderUnit } from "@/services/glpi-task-called.services"
+import { readTaskCalled, removeFolderUnit } from "@/services/glpi-task-called.services"
 import standardizationUnits from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
 import { broadcastWss2 } from "@/utils/broadcast-ws"
@@ -37,6 +37,8 @@ export class GlpiFacade {
   /**
    * Processa os chamados de todas as unidades encontradas:
    *  - Abre o navegador e autentica.
+   *  - Verifica se existem chamados na data específica (`calledsExists`); 
+   *    caso não existam, encerra o navegador e termina a execução.
    *  - Para cada unidade:
    *    - Valida padronização da unidade.
    *    - Seleciona a unidade na árvore.
@@ -45,28 +47,20 @@ export class GlpiFacade {
    *    - Fecha ou mantém aberto dependendo dos erros.
    *    - Remove a pasta temporária da unidade.
    *  - Encerra o navegador ao final.
-   * 
-   * @throws {AppError} Se ocorrer falha no processamento de uma unidade.
+   *
+   * @returns {Promise<void>} 
+   * @throws {AppError | Error} Se ocorrer falha no processamento ou na automação.
    */
 
   public async processCalleds() {
-    const foldersTmp = taskCalled()
-
     await this.browser.setBrowser()
     await this.login.login()
 
     // Valida se o chamado já existe na data especifica antes de abrir novo chamado e tramitar.
     const calledsExists = await this.validationCalled.existsCalledSpecificDate('2025-09-09')
-
-    if (calledsExists) {
-      await this.browser.browserClose()
-      return broadcastWss2(`
-        <p>Chamados já existe nessa data:</p>
-        <p style="color: #f8fafc">${calledsExists.join("")}</p>
-      `.trim())
-    }
-   
-    for (const unit of foldersTmp) {
+    if (!calledsExists) return await this.browser.browserClose()
+       
+    for (const unit of calledsExists) {
       broadcastWss2(`<p>Iniciado abertura de chamado ${unit}</p>`)
       const unitStandard = standardizationUnits[unit.toLowerCase()]
 
@@ -101,6 +95,7 @@ export class GlpiFacade {
         removeFolderUnit(unit)
         broadcastWss2('<p style="color: #22c55e">Chamado tramitado com sucesso <b>' + unit + "</b></p>")
         broadcastWss2(`<p>---------------------------------------</p>`)
+
       } catch (error: any) {
         broadcastWss2(`<p>❌ Erro ao processar unidade "${unit}": ` + error.message || error + "<p>")
         await this.browser.browserClose()

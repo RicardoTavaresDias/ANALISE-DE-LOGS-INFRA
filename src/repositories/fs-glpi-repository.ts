@@ -12,10 +12,10 @@ export class FsGlpiRepository {
    * Verifica se o arquivo ou pasta existe no caminho informado.
    * @param {string} path - Caminho do arquivo/pasta.
    * @returns {boolean} Verdadeiro se existir.
-   * @private
+   * @public
    */
 
-  private existsFileTmp (path: string) {
+  public existsFileTmp (path: string) {
     const fileExist = fs.existsSync(path)
 
     return fileExist
@@ -73,18 +73,17 @@ export class FsGlpiRepository {
     return { contentSucess, contentError }
   }
 
-  /**
-   * Remove a pasta de uma unidade.
-   * @param {string} unit - Nome da unidade/pasta.
+   /**
+   * Remove a pasta temporária de uma unidade.
+   * @param {string} unit - Nome da unidade.
    * @throws {AppError} Se a pasta não existir.
-   * @returns {Promise<void>}
    */
 
-  removeFolder (unit: string) {
+  async removeFolder (unit: string) {
     if (!this.existsFileTmp(`./tmp/${unit}`)) {
       throw new AppError(`A pasta ${unit} não existe para ser excluido.`, 404)
     }
     
-    fs.promises.rm(`./tmp/${unit}`, { recursive: true })
+    await fs.promises.rm(`./tmp/${unit}`, { recursive: true })
   }
 }

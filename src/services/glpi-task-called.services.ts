@@ -1,4 +1,5 @@
 import { FsGlpiRepository,  } from "@/repositories/fs-glpi-repository"
+import standardizationUnits from "@/lib/standardization-units"
 
 const fsGlpiRepository = new FsGlpiRepository()
 
@@ -43,4 +44,40 @@ export async function readTaskCalled (units: string) {
 
 export function removeFolderUnit (unit: string) {
   return fsGlpiRepository.removeFolder(unit)
+}
+
+/**
+ * Valida os chamados existentes removendo as pastas temporárias associadas às unidades encontradas.
+ *
+ * - Remove tags `<br>` da lista de unidades recebidas.
+ * - Filtra apenas os nomes de unidades, ignorando IDs de chamados no formato `\d{3}\d{3}`.
+ * - Localiza as chaves de unidades padronizadas em `standardizationUnits`.
+ * - Remove as pastas temporárias correspondentes em `./tmp`.
+ * - Retorna a lista de pastas ainda existentes ou `false` caso nenhuma permaneça.
+ *
+ * @param {string[]} dataunits - Lista de valores extraídos dos chamados (contendo IDs e/ou nomes de unidades).
+ * @returns {Promise<string[] | false>} Lista das pastas restantes no diretório `./tmp` ou `false` se não houver.
+ * @throws {Error} Caso ocorra falha na manipulação de arquivos ou no repositório `fsGlpiRepository`.
+ */
+
+export async function validationCalledExists (dataunits: string[]) {
+  const removeBR = dataunits.map(value => value?.replaceAll("<br>", ""))
+  const nameUnitsExists = removeBR.filter(value => !value?.match(/\d{3}\d{3}/g))
+  
+  // procurar por nome e trazer a chave do objeto
+  const existingUnitKey = Object.entries(standardizationUnits).filter(([key, value]) => nameUnitsExists.includes(value.name))
+  const keyUnit = existingUnitKey.map(value => value[0])
+
+  for (const keyExists of keyUnit) {
+    if (fsGlpiRepository.existsFileTmp(`./tmp/${keyExists}`)) {
+      await fsGlpiRepository.removeFolder(keyExists)
+    }      
+  }
+
+  try {
+    const existFolderUnit = fsGlpiRepository.showFolderTmp('./tmp')
+    return existFolderUnit
+  } catch {
+    return false
+  }
 }

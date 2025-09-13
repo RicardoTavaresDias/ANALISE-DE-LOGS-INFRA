@@ -1,5 +1,7 @@
 import { env } from "@/config/env"
 import { GlpiBrowser } from "./glpi-browser"
+import { broadcastWss2 } from "@/utils/broadcast-ws"
+import { taskCalled, validationCalledExists } from "@/services/glpi-task-called.services"
 
 /**
  * Serviço responsável por validar se já existe um chamado
@@ -15,13 +17,24 @@ export class GlpiValidationCalled {
   constructor (private browser: GlpiBrowser) {}
 
   /**
-   * Verifica se existe um chamado em uma data específica no GLPI.
-   * @param {string} date - Data a ser verificada (formato esperado pelo GLPI).
-   * @returns {Promise<string[] | false>} Lista de IDs de chamados encontrados ou `false` se nenhum.
-   * @throws {Error} Se ocorrer falha na navegação ou execução da página.
-   */
+ * Verifica se existem chamados no GLPI em uma data específica.
+ *
+ * - Navega até a página de tickets do GLPI filtrando pelo nome "Verificar backup FTP Servidor" e pela data informada.
+ * - Tenta localizar a tabela de resultados:
+ *    - Se a tabela não existir, chama `taskCalled()` e retorna seu resultado.
+ *    - Se a tabela existir, aguarda os elementos ficarem visíveis.
+ * - Extrai os IDs de chamados e nomes de unidades da tabela, formatando o texto (removendo espaços e prefixos).
+ * - Exibe via `broadcastWss2` os chamados encontrados na data.
+ * - Valida os chamados existentes chamando `validationCalledExists`:
+ *    - Remove pastas temporárias de unidades já processadas.
+ *    - Retorna `false` caso não haja arquivos/pastas restantes.
+ *
+ * @param {string} date - Data a ser verificada (formato aceito pelo GLPI).
+ * @returns {Promise<string[] | false>} IDs das unidades com chamados existentes ou `false` se nenhum chamado ou arquivos restantes.
+ * @throws {Error} Se ocorrer falha na navegação, execução do Puppeteer ou na manipulação da página.
+ */
 
-  public async existsCalledSpecificDate (date: string) {
+  public async existsCalledSpecificDate (date: string): Promise<false | string[]> {
     const page = this.browser.getPage()
 
     await page.goto(
@@ -32,7 +45,8 @@ export class GlpiValidationCalled {
     // Tenta localizar tabela
     const hasTable = await page.$("table.tab_cadrehov > tbody > tr > td")
     if (!hasTable) {
-      return false
+      const foldersTmp = taskCalled()
+      return foldersTmp
     } 
 
     await page.waitForSelector("table.tab_cadrehov > tbody > tr > td", { visible: true })
@@ -50,6 +64,17 @@ export class GlpiValidationCalled {
     })
 
     const idCalledExists = result.filter(value => value !== null)
-    return idCalledExists
+    broadcastWss2(`
+      <p>Chamados já existe nessa data:</p>
+      <p style="color: #f8fafc">${idCalledExists.join("")}</p>
+    `.trim())
+
+    const resultValidation = await validationCalledExists(idCalledExists as string[])
+    if (!resultValidation) {
+      broadcastWss2('Não tem arquivo para ser enviado!')
+      return false
+    }
+
+    return resultValidation
   }
 }
