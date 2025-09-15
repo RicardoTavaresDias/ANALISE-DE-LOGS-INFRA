@@ -73,8 +73,6 @@ class FileLogFacade {
       await this.fsRepository.saveFile(`./tmp/${data.units}/${data.units}_error.txt`, error, data.units)
       this.arrayDataSave.length = 0
     }
-
-    // broadcastWss1('\n<span style="color: #1aab79">✅ Arquivo Gerado com sucesso.</span>')
   }
 }
 
