@@ -1,5 +1,5 @@
 import { TreeBuilder } from "@/utils/structuralTree"
-import { parseLogs, splitLogs } from "./log-analysis.services"
+import { parseLogs, splitLogs } from "../log-analysis.services"
 import { AppError } from "@/utils/AppError"
 import { FsRepository } from "@/repositories/fs-repository"
 

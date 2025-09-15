@@ -1,13 +1,13 @@
-import { GlpiBrowser } from "./glpi-browser"
-import { GlpiCalleds } from "./glpi-calleds"
-import { GlpiLogin } from "./glpi-login"
-import { GlpiCreateCalled } from "./glpi-create-called"
-import { Credentials } from "./interface/ICredentials"
+import { GlpiBrowser } from "../glpi-browser"
+import { GlpiCalleds } from "../glpi-calleds"
+import { GlpiLogin } from "../glpi-login"
+import { GlpiCreateCalled } from "../glpi-create-called"
+import { Credentials } from "../interface/ICredentials"
 import { readTaskCalled, removeFolderUnit } from "@/services/glpi-task-called.services"
 import standardizationUnits from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
 import { broadcastWss2 } from "@/utils/broadcast-ws"
-import { GlpiValidationCalled } from "./glpi-validation-called"
+import { GlpiValidationCalled } from "../glpi-validation-called"
 
 /**
  * Fachada principal para operações no GLPI.

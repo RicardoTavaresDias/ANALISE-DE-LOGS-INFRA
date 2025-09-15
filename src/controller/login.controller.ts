@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { loginSchema } from "@/schemas/glpi.schema";
-import { GlpiFacade } from "@/application";
+import { GlpiFacade } from "@/application/facade";
 
 /**
  * @swagger
