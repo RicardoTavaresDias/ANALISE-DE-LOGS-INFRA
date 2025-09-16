@@ -1,5 +1,8 @@
 import { FsGlpiRepository,  } from "@/repositories/fs-glpi-repository"
 import standardizationUnits from "@/lib/standardization-units"
+import { dayjs } from "@/config/dayjs"
+import { DateType } from "@/schemas/log-analysis.schema"
+
 
 const fsGlpiRepository = new FsGlpiRepository()
 
@@ -80,4 +83,57 @@ export async function validationCalledExists (dataunits: string[]) {
   } catch {
     return false
   }
+}
+
+/**
+ * Remove valores duplicados de um array de strings e 
+ * retorna cada item formatado em HTML com quebras de linha.
+ *
+ * @param {string[]} arrayCalledsExists - Lista de unidades possivelmente duplicadas.
+ * @returns {string[]} Lista de unidades únicas formatadas em HTML.
+ */
+
+export function uniqueUnitsToHtml (arrayCalledsExists: string[]) {
+  const removeRepeatedUnits = arrayCalledsExists.filter((unit, index) => 
+      arrayCalledsExists.indexOf(unit) === index)
+
+    const mapHtmlUnits = removeRepeatedUnits.map(value => {
+      if (value.length > 7) {
+        return value + "<br><br>"
+      }
+
+      return value + "<br>"
+    })
+
+  return mapHtmlUnits
+}
+
+/**
+ * Calcula a diferença em dias entre duas datas.
+ *
+ * @param {Object} params - Parâmetros da função.
+ * @param {string} params.dateStart - Data inicial no formato YYYY-MM-DD.
+ * @param {string} params.dateEnd - Data final no formato YYYY-MM-DD.
+ * @returns {number} Número de dias de diferença entre `dateEnd` e `dateStart`.
+ */
+
+export function dayOfWeek ({ dateStart, dateEnd }: DateType) {
+  const week: number = dayjs(dateEnd).diff(dayjs(dateStart), 'day')
+
+  return week
+}
+
+/**
+ * Incrementa uma data inicial em um número específico de dias.
+ *
+ * @param {Object} params - Parâmetros da função.
+ * @param {string} params.dateStart - Data inicial no formato YYYY-MM-DD.
+ * @param {number} params.day - Número de dias a adicionar à data inicial.
+ * @returns {string} Data resultante no formato YYYY-MM-DD.
+ */
+
+type IncrementDayType = Omit<DateType, "dateEnd"> & { day: number }
+
+export function incrementDay ({ day, dateStart }: IncrementDayType) {
+  return dayjs(dateStart).add(day, 'day').format('YYYY-MM-DD')
 }

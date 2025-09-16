@@ -8,6 +8,8 @@ import standardizationUnits from "@/lib/standardization-units"
 import { AppError } from "@/utils/AppError"
 import { broadcastWss2 } from "@/utils/broadcast-ws"
 import { GlpiValidationCalled } from "../glpi-validation-called"
+import { DateType } from "@/schemas/log-analysis.schema"
+
 
 /**
  * Fachada principal para operações no GLPI.
@@ -34,30 +36,33 @@ export class GlpiFacade {
     this.validationCalled = new GlpiValidationCalled(this.browser)
   }
 
-  /**
-   * Processa os chamados de todas as unidades encontradas:
-   *  - Abre o navegador e autentica.
-   *  - Verifica se existem chamados na data específica (`calledsExists`); 
-   *    caso não existam, encerra o navegador e termina a execução.
-   *  - Para cada unidade:
-   *    - Valida padronização da unidade.
-   *    - Seleciona a unidade na árvore.
-   *    - Cria e abre um novo chamado.
-   *    - Registra tarefas (logs) no chamado.
-   *    - Fecha ou mantém aberto dependendo dos erros.
-   *    - Remove a pasta temporária da unidade.
-   *  - Encerra o navegador ao final.
-   *
-   * @returns {Promise<void>} 
-   * @throws {AppError | Error} Se ocorrer falha no processamento ou na automação.
-   */
+ /**
+ * Processa os chamados de todas as unidades dentro de um intervalo de datas.
+ *
+ * Fluxo da função:
+ * 1. Inicializa o navegador e realiza login.
+ * 2. Verifica se existem chamados na data específica (`existsCalledSpecificDate`); 
+ *    se não houver, encerra o navegador e termina a execução.
+ * 3. Para cada unidade encontrada:
+ *    - Valida se a unidade está padronizada (`standardizationUnits`).
+ *    - Seleciona a unidade na árvore do sistema.
+ *    - Cria e abre um novo chamado.
+ *    - Registra tarefas (logs) no chamado.
+ *    - Fecha ou mantém aberto dependendo de erros.
+ *    - Remove a pasta temporária da unidade.
+ * 4. Encerra o navegador ao final da execução.
+ *
+ * @param {DateType} dataInterval - Objeto contendo as datas de início e fim para validação.
+ * @returns {Promise<void>} Promessa resolvida quando todos os chamados forem processados.
+ * @throws {AppError | Error} Caso ocorra falha no processamento ou na automação.
+ */
 
-  public async processCalleds() {
+  public async processCalleds(dataInterval: DateType) {
     await this.browser.setBrowser()
     await this.login.login()
 
     // Valida se o chamado já existe na data especifica antes de abrir novo chamado e tramitar.
-    const calledsExists = await this.validationCalled.existsCalledSpecificDate('2025-09-09')
+    const calledsExists = await this.validationCalled.existsCalledSpecificDate(dataInterval)
     if (!calledsExists) return await this.browser.browserClose()
        
     for (const unit of calledsExists) {
@@ -74,27 +79,27 @@ export class GlpiFacade {
         // Selecionar unidade na árvore
         await this.createCalled.treeUnits(standardizationUnits[unit.toLowerCase()].name)
 
-        // Criar chamado
-        const IdCalledCreate = await this.createCalled.newCalled(standardizationUnits[unit.toLowerCase()])
+        // // Criar chamado
+        // const IdCalledCreate = await this.createCalled.newCalled(standardizationUnits[unit.toLowerCase()])
         
-        // Abrir chamado recém-criado
-        await this.calleds.calledSearch(IdCalledCreate)
+        // // Abrir chamado recém-criado
+        // await this.calleds.calledSearch(IdCalledCreate)
 
-        // Agrupa todos os logs refaturado com sucess e error
-        const responseUnits = await readTaskCalled(unit)
-        if(responseUnits.isError){
-          // Inserir tarefa e fecha chamado => log sem Err
-          await this.calleds.taskCalled(responseUnits.logs)
-          await this.calleds.closeCalled()
-        } else {
-          // Inserir tarefa e deixa aberto o chamado => logs com Err
-          await this.calleds.taskCalled(responseUnits.logs)
-        }
+        // // Agrupa todos os logs refaturado com sucess e error
+        // const responseUnits = await readTaskCalled(unit)
+        // if(responseUnits.isError){
+        //   // Inserir tarefa e fecha chamado => log sem Err
+        //   await this.calleds.taskCalled(responseUnits.logs)
+        //   await this.calleds.closeCalled()
+        // } else {
+        //   // Inserir tarefa e deixa aberto o chamado => logs com Err
+        //   await this.calleds.taskCalled(responseUnits.logs)
+        // }
 
-        // Remover pasta temporária da unidade
-        removeFolderUnit(unit)
-        broadcastWss2('<p style="color: #22c55e">Chamado tramitado com sucesso <b>' + unit + "</b></p>")
-        broadcastWss2(`<p>---------------------------------------</p>`)
+        // // Remover pasta temporária da unidade
+        // removeFolderUnit(unit)
+        // broadcastWss2('<p style="color: #22c55e">Chamado tramitado com sucesso <b>' + unit + "</b></p>")
+        // broadcastWss2(`<p>---------------------------------------</p>`)
 
       } catch (error: any) {
         broadcastWss2(`<p>❌ Erro ao processar unidade "${unit}": ` + error.message || error + "<p>")

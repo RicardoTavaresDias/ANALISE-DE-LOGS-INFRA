@@ -67,8 +67,12 @@ export class LoginController {
         })
       }
 
-      const glpiFacade = new GlpiFacade(user.data)
-      await glpiFacade.processCalleds()
+      const glpiFacade = new GlpiFacade({ 
+        password: user.data.password, 
+        user: user.data.user
+      })
+
+      await glpiFacade.processCalleds(user.data.dateInterval)
 
     } catch (error) {
       next(error)
