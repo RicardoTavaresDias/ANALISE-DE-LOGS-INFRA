@@ -29,19 +29,22 @@ export class GlpiCreateCalled {
   public async treeUnits (unitName: IStandardizationUnits["name"]) {
     const page = this.browser.getPage()
 
-    // Aguarda texto renderizado e rede estabilizar
-    //await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
-
     // Seleciona a arvore das unidades REGIAO SACA
     await page.waitForSelector("#global_entity_select", { timeout: 10000 })
     await page.click("#global_entity_select")
-    
-    await page.waitForSelector(".jstree-closed", { timeout: 10000 })
-    await page.click(".jstree-icon")
+
+    const selectElement = await page.waitForFunction(() => {
+      return !!document.querySelector(".jstree-node.jstree-last.jstree-closed")
+    })
+   
+    if (await selectElement.jsonValue()) {
+      await page.click(".jstree-icon")
+    }
+      
     // aguarda expandido
     await page.waitForSelector(".jstree-open", { timeout: 10000 }) 
 
-     // Aguarda texto renderizado e rede estabilizar
+    // Aguarda texto renderizado e rede estabilizar
     await page.waitForNetworkIdle({ idleTime: 500, timeout: 10000 })
 
     await page.waitForSelector(".jstree-anchor", { timeout: 10000 })
@@ -91,7 +94,7 @@ export class GlpiCreateCalled {
     })
 
     broadcastWss2('<p style="color: #f59e0b">Chamado criado ' + message + "</p>")
-    return message
+    return 'message'
   }
 
   /**
