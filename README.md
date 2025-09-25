@@ -1,4 +1,4 @@
-# ANALISE DE LOGS INFRA
+# ANALISE DE LOGS INFRA 
 
 ![Project Banner](./assets/home.png) <!-- Placeholder for a banner image; replace with actual if available -->
 
